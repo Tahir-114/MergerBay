@@ -1,0 +1,80 @@
+<!-- banner -->
+<section class="banner_inner position-relative">
+    <div class="container position-relative">
+        <div class="form_fields_wrap shadow-none bg-transparent">
+            <ul class="nav nav-fill form_fields_wrap nav-pills form_tabs mb-4 bg-white shadow_sec" id="form_tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true" [ngClass]="{'active': tab1 === true}" [routerLink]="['/buyer/buyer-form/buy-out']">
+                        <img src="../../../../assets/images/business-man.png" class="img-fluid" alt="Buy Out">
+                        Buy Out
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false" [ngClass]="{'show active': tab2 === true}" [routerLink]="['/buyer/buyer-form/investment']">
+                        <img src="../../../../assets/images/profit.png" class="img-fluid" alt="Investment">
+                        Investment
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab" aria-controls="tab3" aria-selected="false" [ngClass]="{'show active': tab3 === true}" [routerLink]="['/buyer/buyer-form/mergers-acquisitions']">
+                        <img src="../../../../assets/images/briefcase.png" class="img-fluid" alt="Mergers & Acquisitions">
+                        Mergers & Acquisitions
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button" role="tab" aria-controls="tab4" aria-selected="false" [ngClass]="{'show active': tab4 === true}" [routerLink]="['/buyer/buyer-form/commercial-property']">
+                        <img src="../../../../assets/images/apartment.png" class="img-fluid" alt="Commercial Property">
+                        Commercial Property
+                    </button>
+                </li>
+            </ul>
+            <div class="container form_fields_wrap bg-white shadow_sec py-4 mt-4">
+                <div class="tab-content" id="form_tabsContent">
+
+                    <h1 class="sec_title text-center d-md-none mb-4">Enter your details</h1>
+
+                    <input id="label_tab1" type="checkbox" name="main_tabs" class="d-none" [checked]="tab1 === true">
+                    <label for="label_tab1" class="form_tab_mob_btn d-md-none mt-0">
+                        <img src="../../../../assets/images/business-man.png" class="img-fluid" alt="Buy Out">
+                        Buy Out
+                    </label>
+                    <div class="tab-pane fade" id="tab1" role="tabpanel" aria-labelledby="tab1-tab" [ngClass]="{'show active': tab1 === true}">
+                        <app-buy-out></app-buy-out>
+                    </div>
+
+
+                    <input id="label_tab2" type="checkbox" name="main_tabs" class="d-none" [checked]="tab2 === true">
+                    <label for="label_tab2" class="form_tab_mob_btn d-md-none">
+                        <img src="../../../../assets/images/profit.png" class="img-fluid" alt="Investment">
+                        Investment
+                    </label>
+                    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab" [ngClass]="{'show active': tab2 === true}">
+                        <app-investment></app-investment>
+                    </div>
+
+
+                    <input id="label_tab3" type="checkbox" name="main_tabs" class="d-none" [checked]="tab3 === true">
+                    <label for="label_tab3" class="form_tab_mob_btn d-md-none">
+                        <img src="../../../../assets/images/briefcase.png" class="img-fluid" alt="Mergers & Acquisitions">
+                        Mergers & Acquisitions
+                    </label>
+                    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab" [ngClass]="{'show active': tab3 === true}">
+                        <app-mergers-acquisitions></app-mergers-acquisitions>
+                    </div>
+
+
+                    <input id="label_tab4" type="checkbox" name="main_tabs" class="d-none" [checked]="tab4 === true">
+                    <label for="label_tab4" class="form_tab_mob_btn d-md-none">
+                        <img src="../../../../assets/images/apartment.png" class="img-fluid" alt="Commercial Property">
+                        Commercial Property
+                    </label>
+                    <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab" [ngClass]="{'show active': tab4 === true}">
+                        <app-commercial-property></app-commercial-property>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- banner - end /-->

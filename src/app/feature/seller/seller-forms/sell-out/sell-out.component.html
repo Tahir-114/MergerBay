@@ -1,0 +1,617 @@
+<div class="form_inner mx-auto">
+    <h4 class="text-center">{{FormType}}</h4>
+    <p class="text-center small">Enter your requirements and provide as much detail as you
+        can.
+    </p>
+    <ul class="nav mx-auto mb-4 nav-pills nav-fill detils-review-tabs" id="detail-review-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" [ngClass]="{'active':formTabSelected}" id="buy-out-details-tab" data-bs-toggle="tab" data-bs-target="#buy-out-details" type="button" role="tab" aria-controls="buy-out-details" [attr.aria-selected]="formTabSelected" (click)="this.formTabSelected=true">1 Enter Proposition
+                Details</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" [ngClass]="{'active':!formTabSelected}" id="buy-out-review-tab" data-bs-toggle="tab" data-bs-target="#buy-out-review" type="button" role="tab" aria-controls="buy-out-review" [attr.aria-selected]="formTabSelected" [disabled]="!this.sellOutForm.valid" (click)="review()">2 Review and
+                Submit</button>
+        </li>
+    </ul>
+    <div class="tab-content detils-review-content" id="detail-review-tabContent">
+        <div class="tab-pane fade"  [ngClass]="{'show active' : formTabSelected}" id="buy-out-details" role="tabpanel" aria-labelledby="buy-out-details-tab">
+            <form [formGroup]="sellOutForm">
+                <div class="mb-3">
+                    <label class="form-label">Project Name<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <input type="text" name="so_project_name" 
+                        class="form-control" [ngClass]="{'field_error': validate('projectName')}" formControlName="projectName">
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                             Name of your Project
+                        </div>
+                    </div>
+                    <div *ngIf="validate('projectName')" id="error" class="error-text">
+                        <div *ngIf="sellOutForm.get('projectName')?.errors?.['email']">
+                            Project Name Must be an Email Address
+                        </div>    
+                        <div *ngIf="sellOutForm.get('projectName')?.errors?.['required']">
+                            Project Name Required
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Your Business Location / Headquarters<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select 
+                        [ngClass]="{'field_error':validate('businessLocation_Id')}" formControlName="businessLocation_Id"
+                        [class]="bo_country" name="bo_business_loc" id="bo_business_loc" (change)="c_bo_country($event, 'bo_country')">
+                            <ng-option *ngFor="let country of countries_list" [value]="country.country_Id">
+                                {{country.name}}</ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Business Location
+                        </div>
+                    </div>
+                    <div *ngIf="validate('businessLocation_Id')" id="error" class="error-text">
+                        <div *ngIf="sellOutForm.get('businessLocation_Id')?.errors?.['required']">
+                            Business Location Required
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Subsidiaries<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select  [multiple]="true"
+                        [ngClass]="{'field_error':validate('subsidiary_Ids')}" formControlName="subsidiary_Ids"
+                        name="so_subsidiaries" id="so_subsidiaries">
+                            <ng-option *ngFor="let country of countries_list" [value]="country.country_Id">
+                                {{country.name}}</ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                             Subsidiary  
+                        </div>
+                    </div>
+                    <div *ngIf="validate('subsidiary_Ids')" id="error" class="error-text">
+                        <div *ngIf="sellOutForm.get('subsidiary_Ids')?.errors?.['required']">
+                            Select Subsidiaries
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 sub_cat_wrap">
+                    <label class="form-label">Sector(s) you are interested in<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select 
+                        [ngClass]="{'field_error':validate('sector_Ids')}" formControlName="sector_Ids"
+                        [multiple]="true" (change)="load_sectors($event)">
+                            <ng-option *ngFor="let sector_interested of sectors_interested" [value]="sector_interested.sectorId">
+                                {{sector_interested.sectorName}}
+                            </ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Sectors You are interested in
+                        </div>
+                    </div>
+                    <div *ngIf="validate('sector_Ids')" id="error" class="error-text">
+                        <div *ngIf="sellOutForm.get('sector_Ids')?.errors?.['required']">
+                            Please Select Sectors
+                        </div>
+                    </div>
+                    <div class="sub_selection_sec" *ngIf="showSubSectors">
+                        <div class="mb-3">
+                            <label class="form-label">Subsector(s) you are interested in<span>*</span></label>
+                            <div class="sub_selection_inner">
+                                <app-seller-subsectors [sectorsArray]="sectorsArr"></app-seller-subsectors>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label d-block d-md-inline-block me-md-3">Year of Establishment<span>*</span></label>
+                    <div class="position-relative input_year_label">
+                        <div class="position-relative field_wrap">
+                            <ng-select name="year_establishment" (change)="calculateYears($event)" [ngClass]="{'field_error':validate('year_Id')}" formControlName="year_Id">
+                                <ng-option *ngFor="let year_establishment of year_establishments" [value]="year_establishment.year">
+                                    {{year_establishment.year}}</ng-option>
+                            </ng-select>
+                            <div class="filed_tooltip">
+                                <div class="tooltip__arrow"></div>
+                                Year of Establishment e.g 2020
+                            </div>
+                        </div>
+                        <span>{{yearsDifference}} Years</span>
+                    </div>
+                    <div *ngIf="validate('year_Id')" id="error" class="error-text">
+                        <div *ngIf="sellOutForm.get('year_Id')?.errors?.['required']">
+                            Please Select Year
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="sellOutForm.get('year_Id')?.value.length > 0">
+                    <div class="mb-3" formArrayName="revenue">
+                        <label class="form-label d-block d-md-inline-block me-md-3">Revenue <span>*</span></label>
+                        <div class="row">
+                            <div *ngFor="let item of revenue?.controls;let i = index" class="col-md-3 mb-2 col-sm-6">
+                                <div class="position-relative field_wrap">
+                                    <input type="text" class="form-control"
+                                    [ngClass]="{'field_error':(item.touched || item.dirty) && item.errors}" [formControlName]="i" placeholder="Year {{i+1}}">
+                                    <div class="filed_tooltip">
+                                        <div class="tooltip__arrow"></div>
+                                        <div>
+                                            Revenue for Year {{i+1}} 
+                                        </div> 
+                                    </div>
+                                    <div *ngIf="item?.errors" id="error" class="error-text">
+                                        <div *ngIf="item?.errors?.['minlength']">
+                                            Invalid Length
+                                        </div>
+                                        <div *ngIf="item?.errors?.['NaN']">
+                                            Numeric Values Allowed
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 input_info_label">
+                                Most Recent Fiscal Year
+                            </div>
+                        </div>
+                        <!-- <div *ngIf="validate('revenue')" id="error" class="error-text">
+                            <div *ngIf="sellOutForm.get('revenue')?.invalid">
+                                Fill All Mendatery Fields
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="mb-3" formArrayName="ebitay">
+                        <label class="form-label d-block d-md-inline-block me-md-3">EBITDA <span class="input_info_label">( Earning Before Interest, Tax,
+                                Depreciation & Amortization )</span></label>
+                        <div class="row">
+                            <div *ngFor="let item of EBITAY?.controls;let i = index" class="col-md-3 mb-2 col-sm-6">
+                                <div class="position-relative field_wrap">
+                                    <input type="text" class="form-control" 
+                                    [ngClass]="{'field_error':(item.touched || item.dirty) && item.errors}" [formControlName]="i" placeholder="Year {{i+1}}">
+                                    <div class="filed_tooltip">
+                                        <div class="tooltip__arrow"></div>
+                                         Enter EBITDA for Year {{i+1}}  
+                                    </div>
+                                    <div *ngIf="item?.errors" id="error" class="error-text">
+                                        <div *ngIf="item?.errors?.['minlength']">
+                                            Invalid Length
+                                        </div>
+                                        <div *ngIf="item?.errors?.['NaN']">
+                                            Numeric Values Allowed
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 input_info_label">
+                                Most Recent Fiscal Year
+                            </div>
+                        </div>
+                        <!-- <div *ngIf="validate('ebitay')" id="error" class="error-text">
+                            <div *ngIf="sellOutForm.get('ebitay')?.invalid">
+                                Fill All Mendatery Fields
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="mb-3" formArrayName="netProfit">
+                        <label class="form-label d-block d-md-inline-block me-md-3">Net Profit <span>*</span></label>
+                        <div class="row">
+                            <div *ngFor="let item of netProfit?.controls;let i = index"  class="col-md-3 mb-2 col-sm-6">
+                                <div class="position-relative field_wrap">
+                                    <input type="text" class="form-control" 
+                                    [ngClass]="{'field_error':(item.touched || item.dirty) && item.errors}"
+                                    [formControlName]="i" placeholder="Year {{i+1}}">
+                                    <div class="filed_tooltip">
+                                        <div class="tooltip__arrow"></div>
+                                        Enter Net Profit for Year {{i+1}} 
+                                    </div>
+                                    <div *ngIf="item?.errors" id="error" class="error-text">
+                                        <div *ngIf="item?.errors?.['minlength']">
+                                            Invalid Length
+                                        </div>
+                                        <div *ngIf="item?.errors?.['NaN']">
+                                            Numeric Values Allowed
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 input_info_label">
+                                Most Recent Fiscal Year
+                            </div>
+                        </div>
+                        <!-- <div *ngIf="validate('netProfit')" id="error" class="error-text">
+                            <div *ngIf="sellOutForm.get('netProfit')?.invalid">
+                                Fill All Mendatery Fields
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label d-block d-md-inline-block me-md-3">Selling Value <span>*</span></label>
+                    <div class="range_selector_wrap align-items-center d-flex container-fluid position-relative field_wrap">
+                        <label class="mb-0">AED | 7 Millions</label> &nbsp;
+                        <ngx-slider class="my-0 mx-3" 
+                        formControlName="sellingValue" [options]="options"></ngx-slider> &nbsp;
+                        <label class="mb-0">250 Millions</label>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Please Select Selling Value
+                        </div>
+                    </div>
+                    <div *ngIf="validate('sellingValue') || (submitted && sellOutForm.get('sellingValue')?.value < 1)" id="error" class="error-text">
+                        Please Select Value
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label d-block d-md-inline-block me-md-3">Fixed Assets Value <span>*</span></label>
+                    <div class="range_selector_wrap align-items-center d-flex container-fluid position-relative field_wrap">
+                        <label class="mb-0">AED | 7 Millions</label> &nbsp;
+                        <ngx-slider class="my-0 mx-3"
+                        formControlName="fixedAssets" [options]="fixed_options"></ngx-slider> &nbsp;
+                        <label class="mb-0">250 Millions</label>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            <div>
+                                Choose Fixed Asset value
+                            </div> 
+                        </div>
+                    </div>
+                    <div *ngIf="validate('fixedAssets') || (submitted && sellOutForm.get('fixedAssets')?.value < 1)" id="error" class="error-text">
+                        Please Select Value
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label d-block d-md-inline-block me-md-3">Inventory Value</label>
+                    <div class="range_selector_wrap align-items-center d-flex container-fluid position-relative field_wrap">
+                        <label class="mb-0">AED | 7 Millions</label> &nbsp;
+                        <ngx-slider class="my-0 mx-3" formControlName="inventoryValue"
+                        [options]="inventory_options"></ngx-slider> &nbsp;
+                        <label class="mb-0">250 Millions</label>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Choose Inventory Options Value
+                        </div>
+                    </div>
+                    <div *ngIf="validate('inventoryValue') || (submitted && sellOutForm.get('inventoryValue')?.value < 1)" id="error" class="error-text">
+                        Please Select Value
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-inline-flex position-relative field_wrap">
+                        <label class="form-label d-block d-md-inline-block me-md-3 mb-0">Do you have any bank Debts? <span>*</span></label>
+                        <div class="form-check form-check-inline mb-0">
+                            <label class="form-check-label" for="bank_depts_y">
+                                <input class="form-check-input" type="radio" formControlName="isBankDebit"  id="bank_depts_y" [value]="true">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline mb-0">
+                            <label class="form-check-label" for="bank_depts_n">
+                                <input class="form-check-input" type="radio" formControlName="isBankDebit"  id="bank_depts_n" [value]="false">
+                                No
+                            </label>
+                        </div>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                             Select Bank Debit
+                        </div>
+                    </div>
+                    <div *ngIf="(submitted && sellOutForm.get('isBankDebit')?.errors)" id="error" class="error-text">
+                        Please Select Value
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-inline-flex position-relative field_wrap">
+                        <label class="form-label d-block d-md-inline-block me-md-3 mb-0">Do you have Audited Financial Statements? <span>*</span></label>
+                        <div class="form-check form-check-inline mb-0">
+                            <label class="form-check-label" for="audit_finc_stat_y">
+                                <input class="form-check-input" type="radio"  formControlName="isAuditFinancialStatement" id="audit_finc_stat_y" [value]="true">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline mb-0">
+                            <label class="form-check-label" for="audit_finc_stat_n">
+                                <input class="form-check-input" type="radio" formControlName="isAuditFinancialStatement" id="audit_finc_stat_n" [value]="false">
+                                No
+                            </label>
+                        </div>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Select Financial Statement
+                        </div>
+                    </div>
+                    <div *ngIf="(submitted && sellOutForm.get('isAuditFinancialStatement')?.errors)" id="error" class="error-text">
+                        Please Select Value
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-md-inline-flex position-relative field_wrap">
+                        <label class="form-label d-block d-md-inline-block me-md-3 mb-0">Do you have a valuation report? <span>*</span></label>
+                        <div class="form-check form-check-inline mb-0">
+                            <label class="form-check-label" for="valuation_report_y">
+                                <input class="form-check-input" type="radio" formControlName="isValuationReport" id="valuation_report_y" [value]="true">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline mb-0">
+                            <label class="form-check-label" for="valuation_report_n">
+                                <input class="form-check-input" type="radio" formControlName="isValuationReport" id="valuation_report_n" [value]="false">
+                                No
+                            </label>
+                        </div>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Select Valuation Report
+                        </div>
+                    </div>
+                    <div *ngIf="(submitted && sellOutForm.get('isValuationReport')?.errors)" id="error" class="error-text">
+                        Please Select Value
+                    </div>
+                </div>
+                <div class="mb-3 sub_cat_wrap">
+                    <label class="form-label">Your role in the Transaction<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select (change)="load_Mendate($event)" name="transaction_role" [ngClass]="{'field_error':validate('transactionRole_Id')}"  formControlName="transactionRole_Id">
+                            <ng-option *ngFor="let transaction_role of transaction_roles" [value]="transaction_role.role_Id">
+                                {{transaction_role.name}}</ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                             Select Transaction Role
+                        </div>
+                    </div>
+                    <div *ngIf="validate('transactionRole_Id')" id="error" class="error-text">
+                        <div *ngIf="sellOutForm.get('transactionRole_Id')?.errors?.['required']">
+                            Please Select Transaction Role
+                        </div>
+                    </div>
+                    <div class="sub_selection_sec" *ngIf="showMendate">
+                        <div class="mb-3">
+                            <div class="d-md-flex align-items-center pt-4">
+                                <label class="form-label d-block d-md-inline-block me-md-3">Do you have a
+                                    Mandate<span>*</span></label>
+                                <div class="form-check form-check-inline mb-0">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" formControlName="isMendate"  id="mandate_y" [value]="true">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline mb-0">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" formControlName="isMendate" id="mandate_n" [value]="false">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div *ngIf="(submitted && sellOutForm.get('isMendate')?.errors)" id="error" class="error-text">
+                                Please Select Value
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Additional Description<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <textarea class="form-control" [ngClass]="{'field_error':validate('description')}" formControlName="description" name="so_additional_description" placeholder="Brief, competition, and market size etc."></textarea>
+                        <div *ngIf="sellOutForm.get('description')?.errors" class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>   
+                            Detailed Description 
+                        </div>
+                    </div>
+                    <div *ngIf="validate('description')" id="error" class="error-text">
+                        <div *ngIf="sellOutForm.get('description')?.errors?.['required']">
+                            Enter Description
+                            </div> 
+                           <div *ngIf="sellOutForm.get('description')?.errors?.['minlength']">
+                            Description Must be greater than 10 words
+                           </div>  
+                    </div>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" formControlName="termsAndConditions" type="checkbox" value="" id="agree_check">
+                    <label class="form-check-label" for="agree_check">
+                        Agreed To Terms and Conditions *
+                    </label>
+                    <div id="error" class="error-text" *ngIf="submitted && sellOutForm.get('termsAndConditions')?.value===false ">
+                        Please Agree to Terms and Conditions
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 mb-2">
+                        <button type="button" class="form_tab_btn form_btn_bordered" (click)="cancel()" >Cancel</button>
+                    </div>
+                    <div class="col-sm-4 mb-2">
+                        <button type="button" class="form_tab_btn form_btn_dark" (click)="SaveForm()" *ngIf="false">Save as
+                            Draft</button>
+                    </div>
+                    <div class="col-sm-4 mb-2">
+                        <button type="button" class="form_tab_btn theme_btn" (click)="review()" >Next</button>
+                    </div>
+                </div>
+            </form>            
+       </div>
+        <div class="tab-pane fade"  [ngClass]="{'show active' : !formTabSelected}" id="buy-out-review" role="tabpanel" aria-labelledby="buy-out-review-tab">
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Project Name
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                        {{_data.projectName}}  
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Your Business Location / Headquarters
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    {{_data.location}}
+
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Subsidiaries
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    {{_data.subsidiaries}}
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Sector(s) you are interested in*
+                </div>
+                <div class="col-md-6 review_txt_opt">
+                    {{_data.sectors}}
+                </div>
+                <div class="col-md-12 mt-1 review_txt_sel" *ngIf="showSubSectors">
+                    <div class="sub_selection_sec">
+                        <div class="mb-3">
+                            <label class="form-label">Subsector(s) you are interested in
+                                <span>*</span></label>
+                            <div class="sub_selection_inner">
+                                <app-seller-subsectors [isDisabled]="true" [sectorsArray]="selectedSectorsArray"></app-seller-subsectors>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Year of Establishment*
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    {{_data.year}}
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Revenue (Million)
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    <div class="row">
+                        <div *ngFor="let item of revenue?.controls;let i = index" class="col-3">
+                            <label>{{item?.value}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    EBITDA (Million)
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    <div class="row">
+                        <div *ngFor="let item of EBITAY?.controls;let i = index" class="col-3">
+                            <label>{{item?.value}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Net Profit (Million)
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    <div class="row">
+                        <div *ngFor="let item of netProfit?.controls;let i = index" class="col-3">
+                            <label>{{item?.value}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Selling Value
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    {{_data.sellingValue}} Million
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Fixed Assets Value
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    {{_data.fixedAssets}} Million
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Inventory Value
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    {{_data.inventoryValue}} Million
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Do you have any bank Debts?
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    {{_data.isBankDebit? 'Yes': 'No'}}
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Do you have Audited Financial Statements?
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    {{_data.sAuditFinancialStatement? 'Yes': 'No'}}  
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Do you have a valuation report?
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                    {{_data.isValuationReport? 'Yes': 'No'}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 review_txt_opt">
+                    Your role in the Transaction
+                </div>
+                   <div class="col-md-6 review_txt_sel">
+                       {{_data.role}}
+                   </div>
+               </div>
+            <div class="row mb-4" *ngIf="showMendate">
+                <div class="col-md-6 review_txt_opt">
+                    <div class="sub_selection_sec">
+                        <div class="">
+                            <div class="d-md-flex align-items-center pt-4">
+                                <label class="form-label mb-0">Do you have a
+                                    Mandate<span>*</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-1 mt-md-0 review_txt_sel align-self-end">
+                    {{_form.isMendate? 'Yes' : 'No'}}
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6 review_txt_opt">
+                    Additional Description
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 review_txt_opt">
+                    <div class="review_txt_txtarea">
+                       {{_data.description}}
+                    </div>
+                </div>
+                <div class="col-md-12 mt-4">
+                    <div class="row">
+                        <div class="col-sm-4 mb-2">
+                            <button type="button" class="form_tab_btn form_btn_bordered" (click)="this.formTabSelected=true">Back</button>
+                        </div>
+                        <div class="col-sm-4 mb-2">
+                            <button type="button" class="form_tab_btn form_btn_dark" (click)="this.formTabSelected=true">Edit</button>
+                        </div>
+                        <div class="col-sm-4 mb-2">
+                            <button type="button" class="form_tab_btn theme_btn" (click)="SaveForm()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

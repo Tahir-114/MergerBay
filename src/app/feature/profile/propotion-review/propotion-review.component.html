@@ -1,0 +1,529 @@
+<section class="banner_inner position-relative">
+    <div class="container position-relative">
+        <div *ngIf="data" class="form_fields_wrap mw-100 bg-white shadow_sec py-4 py-md-5 mt-4">
+            <div class="container px-lg-4"> 
+                <div class="row" *ngIf="data.type == formTypeBuyer">
+                    <div class="col-md-11 mx-auto">
+                        <div class="d-md-flex align-items-center mb-4 justify-content-between">
+                            <h4 class="mb-md-0"><b> {{data?.type}} | {{data?.subType}} </b></h4>
+                            <button class="theme_btn_sm" [routerLink]="['/propositions']">My Propositions</button>
+                        </div>
+                        <div class="rounded_sec mb-0 container py-4 px-lg-4 mb-4 mb-md-5 d-md-flex align-items-center justify-content-between" style="background-color: #F2F2F2">
+                            <div class="mb-3 mb-md-0">
+                                <span class="clr_light">Business Location</span>
+                                <h5 class="mb-0">{{data.businessLocation}}</h5>
+                                <span class="clr_light">{{data.created_Date | timeAgo }} | <img src="../../../../assets/images/check_status.png" alt="Approved" class="img-fluid me-1"> {{data.status}}</span>
+                            </div>
+                            <button class="theme_btn_sm">Deal Room</button>
+                        </div>
+                        <div class="form_inner mx-auto">
+                            <div *ngIf="data?.subType == formTypeCommercial then commercial else other"></div>
+                            <ng-template #other>
+                                <div class="row">
+                                    <div class="col-md-6 mb-1 review_txt_opt">Business Location / Headquarters</div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">{{data.businessLocation}}</div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Country you are Interested in
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.countriesInterested}}
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Select City
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.city}} - {{data.countriesInterested}}
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Sector(s) you are interested in*
+                                        </div>
+                                        <div class="col-md-6 review_txt_opt">
+                                            {{data.sectors}}
+                                        </div>
+                                        <!-- <div class="col-md-12 mt-1 review_txt_sel" *ngIf="showSubSectors">
+                                            <div class="sub_selection_sec">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Subsector(s) you are interested in
+                                                        <span>*</span></label>
+                                                    <div class="sub_selection_inner">
+                                                        <app-buyer-subsectors [isDisabled]="true" [sectorsArray]="selectedSectorsArray"></app-buyer-subsectors>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <ng-container *ngIf="showTransactionType then transactionType else OwnerShipPrefs"></ng-container>
+                                    <ng-template #transactionType>
+                                        <div class="col-md-6 mb-1 review_txt_opt">Transaction Type</div>
+                                        <div class="col-md-6 mb-4 review_txt_sel">
+                                            {{data.transactionType}}
+                                        </div>
+                                    </ng-template>
+                                    <ng-template #OwnerShipPrefs >
+                                        <div class="col-md-6 mb-1 review_txt_opt">
+                                            Ownership Preference
+                                        </div>
+                                        <div class="col-md-6 mb-4 review_txt_sel">
+                                            {{data.ownerShipPreference}}
+                                        </div>
+                                    </ng-template>
+                    
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Valuation Preference
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.valuationPreferenceFrom}} Million  -  {{data.valuationPreferenceTo}} Million
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Investment Values
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.investmentValueFrom}} Million  -  {{data.investmentValueTo}} Million
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Revenue Preference
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.revenuePreference}} Million
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        EBITDA Preference Minimum
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.ebitda}}%
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Net Profit Preference Minimum
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.netProfit}}%
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Do you required any financing?
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                       {{data.isFinancingRequired? 'Yes': 'No'}}
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Role in the Transaction
+                                        </div>
+                                           <div class="col-md-6 review_txt_sel">
+                                               {{data.role}}
+                                           </div>
+                                       </div>
+                                    <!-- <div class="row mb-4" *ngIf="showMendate"> -->
+                                    <div class="row mb-4" *ngIf="showMendate">
+                                        <div class="col-md-6 review_txt_opt">
+                                            <div class="sub_selection_sec">
+                                                <div class="">
+                                                    <div class="d-md-flex align-items-center pt-4">
+                                                        <label class="form-label mb-0">Do you have a
+                                                            Mandate<span>*</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel align-self-end">
+                                            {{data.isMendate? 'Yes' : 'No'}}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Additional Description
+                                    </div>
+                                    <div class="col-md-12 mb-1 review_txt_opt">
+                                        <div class="review_txt_txtarea">
+                                            {{data.description}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template #commercial>
+                                <div class="row">
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Business Location / Headquarters
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.businessLocation}}
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Type of Property
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.property}}
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Property Location
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.countriesInterested}}
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Selected City
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.city}} - {{data.countriesInterested}}
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Property Value
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                        {{data.propertyValueFrom}} Million  -  {{data.propertyValueTo}} Million
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Do you required any financing?
+                                    </div>
+                                    <div class="col-md-6 mb-4 review_txt_sel">
+                                       {{data.isFinancingRequired? 'Yes': 'No'}}
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Role in the Transaction
+                                        </div>
+                                           <div class="col-md-6 review_txt_sel">
+                                               {{data.role}}
+                                           </div>
+                                       </div>
+                                    <!-- <div class="row mb-4" *ngIf="showMendate"> -->
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            <div class="sub_selection_sec">
+                                                <div class="">
+                                                    <div class="d-md-flex align-items-center pt-4">
+                                                        <label class="form-label mb-0">Do you have a
+                                                            Mandate<span>*</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel align-self-end">
+                                            {{data.isMendate? 'Yes' : 'No'}}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-1 review_txt_opt">
+                                        Additional Description
+                                    </div>
+                                    <div class="col-md-12 mb-1 review_txt_opt">
+                                        <div class="review_txt_txtarea">
+                                            {{data.description}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="data.type != formTypeBuyer">
+                    <div class="col-md-11 mx-auto">
+                        <div class="d-md-flex align-items-center mb-4 justify-content-between">
+                            <h4 class="mb-md-0"><b> {{data?.type}} | {{data?.subType}} </b></h4>
+                            <button class="theme_btn_sm" [routerLink]="['/propositions']">My Propositions</button>
+                        </div>
+                        <div class="rounded_sec mb-0 container py-4 px-lg-4 mb-4 mb-md-5 d-md-flex align-items-center justify-content-between" style="background-color: #F2F2F2">
+                            <div class="mb-3 mb-md-0">
+                                <span class="clr_light">Project Name</span>
+                                <h5 class="mb-0">{{data.projectName}}</h5>
+                                <span class="clr_light">{{data.created_Date | timeAgo }} | <img src="../../../../assets/images/check_status.png" alt="Approved" class="img-fluid me-1"> {{data.status}}</span>
+                            </div>
+                            <button class="theme_btn_sm">Deal Room</button>
+                        </div>
+                        <div class="form_inner mx-auto" *ngIf="data.type != formTypeBuyer">
+                            <div *ngIf="data?.subType == formTypeCommercial then commercialSell else otherSell"></div>
+                            <ng-template #otherSell>
+                                <div class="row">
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Project Name
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                                {{data.projectName}}  
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Business Location / Headquarters
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.businessLocation}}
+                        
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Subsidiaries
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.countriesInterested}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Sector(s) you are interested in*
+                                        </div>
+                                        <div class="col-md-6 review_txt_opt">
+                                            {{data.sectors}}
+                                        </div>
+                                        <!-- <div class="col-md-12 mt-1 review_txt_sel" *ngIf="showSubSectors">
+                                            <div class="sub_selection_sec">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Subsector(s) you are interested in
+                                                        <span>*</span></label>
+                                                    <div class="sub_selection_inner">
+                                                        <app-seller-subsectors [isDisabled]="true" [sectorsArray]="selectedSectorsArray"></app-seller-subsectors>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Year of Establishment*
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.year_Id}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Revenue (Million)
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.revenue}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            EBITDA (Million)
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.ebitay}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Net Profit (Million)
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.netProfit}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Selling Value
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.sellingValue}} Million
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Fixed Assets Value
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.fixedAssets}} Million
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Inventory Value
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.inventoryValue}} Million
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Do you have any bank Debts?
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.isBankDebit? 'Yes': 'No'}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Do you have Audited Financial Statements?
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.isAuditFinancialStatement? 'Yes': 'No'}}  
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Do you have a valuation report?
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.isValuationReport? 'Yes': 'No'}}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Role in the Transaction
+                                        </div>
+                                           <div class="col-md-6 review_txt_sel">
+                                               {{data.role}}
+                                           </div>
+                                       </div>
+                                    <div class="row mb-4" *ngIf="showMendate">
+                                        <div class="col-md-6 review_txt_opt">
+                                            <div class="sub_selection_sec">
+                                                <div class="">
+                                                    <div class="d-md-flex align-items-center pt-4">
+                                                        <label class="form-label mb-0">Do you have a
+                                                            Mandate<span>*</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel align-self-end">
+                                            {{data.isMendate? 'Yes' : 'No'}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Additional Description
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 review_txt_opt">
+                                            <div class="review_txt_txtarea">
+                                               {{data.description}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template #commercialSell>
+                                <div class="row">
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Project Name
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.projectName}}  
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Business Location / Headquarters
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.businessLocation}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Property of Type 
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.property}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Year of Completion
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.year_Id}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Value of Property
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.propertyValue}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Land Area
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.landArea}} Sq.Ft
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Built Up Area
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.builtUpArea}} Sq.Ft
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Do you have Contract With an Operator?
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.hasContract? 'Yes': 'No'}}  
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Duration of the Contract
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.duration}} Years
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Annual Gross Income
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.annualGrossIncome}} Million
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Do you have valuation Report?
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel">
+                                            {{data.isValuationReport? 'Yes': 'No'}}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 review_txt_opt">
+                                             Role in the Transaction
+                                        </div>
+                                           <div class="col-md-6 review_txt_sel">
+                                               {{data.role}}
+                                           </div>
+                                       </div>
+                                    <div class="row mb-4" *ngIf="showMendate">
+                                        <div class="col-md-6 review_txt_opt">
+                                            <div class="sub_selection_sec">
+                                                <div class="">
+                                                    <div class="d-md-flex align-items-center pt-4">
+                                                        <label class="form-label mb-0">Do you have a
+                                                            Mandate<span>*</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-1 mt-md-0 review_txt_sel align-self-end">
+                                            {{data.isMendate? 'Yes' : 'No'}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 review_txt_opt">
+                                            Additional Description
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 review_txt_opt">
+                                            <div class="review_txt_txtarea">
+                                               {{data.description}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,49 @@
+{
+  "name": "merger-bay-angular",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular-slider/ngx-slider": "^2.0.4",
+    "@angular/animations": "~13.2.0",
+    "@angular/common": "~13.2.0",
+    "@angular/compiler": "~13.2.0",
+    "@angular/core": "~13.2.0",
+    "@angular/forms": "~13.2.0",
+    "@angular/platform-browser": "~13.2.0",
+    "@angular/platform-browser-dynamic": "~13.2.0",
+    "@angular/router": "~13.2.0",
+    "@ng-select/ng-select": "^8.3.0",
+    "highcharts": "^10.2.0",
+    "ngx-slick-carousel": "^0.6.0",
+    "ngx-spinner": "^13.1.1",
+    "ngx-toastr": "^14.3.0",
+    "owl.carousel": "^2.3.4",
+    "rxjs": "~7.5.0",
+    "slick-carousel": "^1.8.1",
+    "swiper": "^8.3.1",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~13.2.6",
+    "@angular/cli": "~13.2.6",
+    "@angular/compiler-cli": "~13.2.0",
+    "@types/jasmine": "~3.10.0",
+    "@types/jquery": "^3.5.14",
+    "@types/node": "^12.11.1",
+    "jasmine-core": "~4.0.0",
+    "karma": "~6.3.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.1.0",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "~1.7.0",
+    "typescript": "~4.5.2"
+  }
+}

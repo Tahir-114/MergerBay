@@ -1,0 +1,42 @@
+<!-- banner -->
+<section class="banner_inner position-relative overflow-hidden">
+    <div class="container my-5 position-relative">
+        <!-- form -->
+        <div class="login_form_wrap py-5 px-3">
+            <div class="login_form_inner mx-auto" [formGroup]="signInForm">
+                <h1 class="sec_title text-center"><span>Login</span> into Merger's Bay.</h1>
+                <p class="text-center">Enter you login details of Mergers Bay's Account!</p>
+                <div class="mb-3">
+                    <label class="form-label">Email ID <span>*</span></label>
+                    <input type="email" [ngClass]="email?.invalid && (email?.dirty || email?.touched) ? 'form-control field_error' :'form-control'" formControlName="emaillogin">
+                    <div *ngIf="submitted">
+                        <div *ngIf="emailErrorMessage" class="text-danger">{{emailErrorMessage}}</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password <span>*</span></label>
+                    <div class="password_field_wrap position-relative">
+                        <input [type]="show_password ? 'text' : 'password'" [ngClass]="password1?.invalid && (password1?.dirty || password1?.touched) ? 'form-control field_error' :'form-control'" formControlName="passwordlogin">
+                        <button (click)="show_password = !show_password" class="btn p-0 shadow-none">
+                            <img src="../../../assets/images/eye.png" alt="Show Password"  *ngIf="!show_password">
+                            <img src="../../../assets/images/eye2.png" alt="Show Password" *ngIf="show_password">
+                        </button>
+                    </div>
+                    <div *ngIf="submitted">
+                        <div *ngIf="passwordErrorMessage" class="text-danger">{{passwordErrorMessage}}</div>
+                    </div>
+                </div>
+                <div class="mb-3 form_links d-flex align-items-center justify-content-between">
+                    <a [routerLink]="['/sign-up']">Don't have an Account? <span>Sign Up</span></a>
+                    <!-- <a href="#.">Create a new Account / Sign Up?</a> -->
+                    <a href="#.">Forgot Password</a>
+                </div>
+                <div class="mb-3 mt-5 pt-md-4 text-center">
+                    <button class="theme_btn" (click)="loginUser()">Login</button>
+                </div>
+            </div>
+        </div>
+        <!-- form - end /-->
+    </div>
+</section>
+<!-- banner - end /-->

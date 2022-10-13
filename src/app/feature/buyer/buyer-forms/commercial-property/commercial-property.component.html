@@ -1,0 +1,331 @@
+<div class="form_inner mx-auto">
+    <h4 class="text-center">Commercial Property</h4>
+    <p class="text-center small">Enter your requirements and provide as much detail as you
+        can.
+    </p>
+    <ul class="nav mx-auto mb-4 nav-pills nav-fill detils-review-tabs" id="detail-review-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="comm-porperty-details-tab" data-bs-toggle="tab" data-bs-target="#comm-porperty-details" type="button" role="tab" aria-controls="comm-porperty-details" [attr.aria-selected]="formTabSelected" (click)="this.formTabSelected=true">1 Enter Proposition
+                Details</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="comm-porperty-review-tab" data-bs-toggle="tab" data-bs-target="#comm-porperty-review" type="button" role="tab" aria-controls="comm-porperty-review" [attr.aria-selected]="formTabSelected"  [disabled]="!this.form.valid" (click)="review()">2 Review and
+                Submit</button>
+        </li>
+    </ul>
+    <div class="tab-content detils-review-content" id="detail-review-tabContent">
+        <div class="tab-pane fade" [ngClass]="{'show active' : formTabSelected}"  id="comm-porperty-details" role="tabpanel" aria-labelledby="comm-porperty-details-tab">
+        <form [formGroup]="form">
+            <div class="mb-3">
+                <label class="form-label">Your Business Location / Headquarters<span>*</span></label>
+                <div class="position-relative field_wrap">
+                    <ng-select 
+                    [ngClass]="{'field_error':validate('businessLocation_Id')}" formControlName="businessLocation_Id"
+                    [class]="bo_country" name="bo_business_loc" id="bo_business_loc" (change)="c_bo_country($event, 'bo_country')">
+                        <ng-option *ngFor="let country of countries_list" [value]="country.country_Id">
+                            {{country.name}}</ng-option>
+                    </ng-select>
+                    <div class="filed_tooltip">
+                        <div class="tooltip__arrow"></div>
+                        Business Location
+                    </div>
+                </div>
+                <div *ngIf="validate('businessLocation_Id')" id="error" class="error-text">
+                    <div *ngIf="form.get('businessLocation_Id')?.errors?.['required']">
+                        Business Location Required
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Type of Property</label>
+                <div class="position-relative field_wrap">
+                    <ng-select 
+                    [ngClass]="{'field_error':validate('property_Id')}" formControlName="property_Id"
+                    name="cp_type" id="cp_type">
+                        <ng-option *ngFor="let property of properties_list" [value]="property.property_Id">
+                            {{property.name}}
+                        </ng-option>
+                    </ng-select>
+                    <div class="filed_tooltip">
+                        <div class="tooltip__arrow"></div>
+                         Property Type You're Interested In
+                    </div>
+                </div>
+                <div *ngIf="validate('property_Id')" id="error" class="error-text">
+                    <div *ngIf="form.get('property_Id')?.errors?.['required']">
+                        Property Type Required
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Property Location <span>*</span></label>
+                <div class="position-relative field_wrap">
+                    <ng-select name="cp_prop_loc" 
+                    [class]="bo_location"
+                    (change)="c_bo_location($event, 'bo_location')"
+                    [ngClass]="{'field_error':validate('country_Ids')}" formControlName="country_Ids"
+                    id="cp_prop_loc">
+                        <ng-option *ngFor="let country of countries_list" [value]="country.country_Id">
+                            {{country.name}}</ng-option>
+                    </ng-select>
+                    <div class="filed_tooltip">
+                        <div class="tooltip__arrow"></div>
+                         Property Location
+                    </div>
+                </div>
+                <div *ngIf="validate('country_Ids')" id="error" class="error-text">
+                    <div *ngIf="form.get('country_Ids')?.errors?.['required']">
+                        Property Location Required
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Select City <span>*</span></label>
+                <div class="position-relative field_wrap">
+                    <ng-select
+                    [ngClass]="{'field_error':validate('city_Id')}" formControlName="city_Id">
+                    <ng-option *ngFor="let city of cities_list" [value]="city.city_Id">
+                        {{city.name}}
+                    </ng-option>
+                </ng-select>
+                    <div class="filed_tooltip">
+                        <div class="tooltip__arrow"></div>
+                        Select City 
+                    </div>
+                </div>
+                <div *ngIf="validate('country_Ids')" id="error" class="error-text">
+                    <div *ngIf="form.get('country_Ids')?.errors?.['required']">
+                        City is Required
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Value of Property <span>*</span></label>
+                <div class="row align-items-center">
+                    <div class="col-md-5">
+                        <div class="position-relative input_curr_sign field_wrap">
+                            <span>AED</span>
+                            <input type="text" class="form-control" placeholder="30000"
+                            (ngModelChange)="propertyValueFromConverted =  CalculateCurrency($event)"
+                            [ngClass]="{'field_error': validate('propertyValueFrom') || (form.get('propertyValueFrom')?.errors?.['NaN']) }"
+                            formControlName="propertyValueFrom">
+                            <div class="filed_tooltip">
+                                <div class="tooltip__arrow"></div>
+                                 Minumum Property Value
+                            </div>
+                        </div>
+                        <span class="input_curr_val">$ {{propertyValueFromConverted | number : '1.2-4'}}</span>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="position-relative input_curr_sign field_wrap">
+                            <span>AED</span> 
+                            <input type="text" class="form-control" placeholder="500000" (ngModelChange)="propertyValueToConverted =  CalculateCurrency($event)"
+                            [ngClass]="{'field_error': validate('propertyValueTo') || (form.get('propertyValueTo')?.errors?.['NaN'])}"
+                            formControlName="propertyValueTo">
+                            <div class="filed_tooltip">
+                                <div class="tooltip__arrow"></div>
+                                Maximum Property Value
+                            </div>
+                        </div>
+                        <span class="input_curr_val">$ {{propertyValueToConverted | number : '1.2-4'}}</span>
+                    </div>
+                    <div class="col-md-2"><label>Millions</label></div>
+                </div>
+                <div *ngIf="validate('propertyValueTo')" id="error" class="error-text">
+                    <div *ngIf="form.get('propertyValueTo')?.errors?.['LessThan']">
+                        Value must be grater
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-md-inline-flex position-relative field_wrap">
+                    <label class="form-label me-3 mb-0">Do you required any financing?<span>*</span></label>
+                    <div class="form-check form-check-inline mb-0">
+                        <label class="form-check-label" for="req_fin_y">
+                            <input class="form-check-input" type="radio" name="isFinancingRequired" formControlName="isFinancingRequired" id="req_fin_y" [value]="true">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline mb-0">
+                        <label class="form-check-label" for="req_fin_n">
+                            <input class="form-check-input" type="radio" name="isFinancingRequired" formControlName="isFinancingRequired" id="req_fin_n" [value]="false">
+                            No
+                        </label>
+                    </div>
+                    <div class="filed_tooltip">
+                        <div class="tooltip__arrow"></div>
+                        Select yes If You required Financing.
+                    </div>
+                </div>
+                <div *ngIf="(submitted && form.get('isFinancingRequired')?.errors)" id="error" class="error-text">
+                    Please Select Value
+                </div>
+            </div>
+            <div class="mb-3 sub_cat_wrap">
+                <label class="form-label">Your role in the Transaction<span>*</span></label>
+                <div class="position-relative field_wrap">
+                    <ng-select (change)="load_Mendate($event)"  name="transaction_role" [ngClass]="{'field_error':validate('transactionRole_Id')}"  formControlName="transactionRole_Id">
+                        <ng-option *ngFor="let transaction_role of transaction_roles" [value]="transaction_role.role_Id">
+                            {{transaction_role.name}}</ng-option>
+                    </ng-select>
+                    <div class="filed_tooltip">
+                        <div class="tooltip__arrow"></div>
+                         Select Transaction Role
+                    </div>
+                </div>
+                <div *ngIf="validate('transactionRole_Id')" id="error" class="error-text">
+                    <div *ngIf="form.get('transactionRole_Id')?.errors?.['required']">
+                        Please Select Transaction Role
+                    </div>
+                </div>
+                <div class="sub_selection_sec" *ngIf="showMendate">
+                    <div class="mb-3">
+                        <div class="d-md-flex align-items-center pt-4">
+                            <label class="form-label d-block d-md-inline-block me-md-3">Do you have a
+                                Mandate<span>*</span></label>
+                            <div class="form-check form-check-inline mb-0">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" formControlName="isMendate"  id="mandate_y" [value]="true">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline mb-0">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" formControlName="isMendate" id="mandate_n" [value]="false">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div *ngIf="(submitted && form.get('isMendate')?.errors)" id="error" class="error-text">
+                            Please Select Value
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Additional Description<span>*</span></label>
+                <div class="position-relative field_wrap">
+                    <textarea class="form-control" [ngClass]="{'field_error':validate('description')}" formControlName="description" name="so_additional_description" placeholder="Brief, competition, and market size etc."></textarea>
+                    <div *ngIf="form.get('description')?.errors" class="filed_tooltip">
+                        <div class="tooltip__arrow"></div>   
+                        Detailed Description 
+                    </div>
+                </div>
+                <div *ngIf="validate('description')" id="error" class="error-text">
+                    <div *ngIf="form.get('description')?.errors?.['required']">
+                        Enter Description
+                        </div> 
+                       <div *ngIf="form.get('description')?.errors?.['minlength']">
+                        Description Must be greater than 10 words
+                       </div>  
+                </div>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" formControlName="termsAndConditions" type="checkbox" value="" id="agree_check">
+                <label class="form-check-label" for="agree_check">
+                    Agreed To Terms and Conditions *
+                </label>
+                <div id="error" class="error-text" *ngIf="submitted && form.get('termsAndConditions')?.value===false ">
+                    Please Agree to Terms and Conditions
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 mb-2">
+                    <button type="button" class="form_tab_btn form_btn_bordered" (click)="cancel()" >Cancel</button>
+                </div>
+                <div class="col-sm-4 mb-2">
+                    <button type="button" class="form_tab_btn form_btn_dark" *ngIf="false">Save as
+                        Draft</button>
+                </div>
+                <div class="col-sm-4 mb-2">
+                    <button type="button" class="form_tab_btn theme_btn" (click)="review()" >Next</button>
+                </div>
+            </div>
+        </form>
+        </div>
+        <div class="tab-pane fade" [ngClass]="{'show active' : !formTabSelected}" id="comm-porperty-review" role="tabpanel" aria-labelledby="comm-porperty-review-tab">
+            <div class="row mb-3">
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Your Business Location / Headquarters
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.location}}
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Type of Property
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.property}}
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Property Location
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.country}}
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Selected City
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.city}} - {{_data.country}}
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Property Value
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.propertyValueFrom}} Million  -  {{_data.propertyValueTo}} Million
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Do you required any financing?
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                   {{_data.isFinancingRequired? 'Yes': 'No'}}
+                </div>
+                <div class="row">
+                    <div class="col-md-6 review_txt_opt">
+                        Your role in the Transaction
+                    </div>
+                       <div class="col-md-6 review_txt_sel">
+                           {{_data.role}}
+                       </div>
+                   </div>
+                <div class="row mb-4" *ngIf="showMendate">
+                    <div class="col-md-6 review_txt_opt">
+                        <div class="sub_selection_sec">
+                            <div class="">
+                                <div class="d-md-flex align-items-center pt-4">
+                                    <label class="form-label mb-0">Do you have a
+                                        Mandate<span>*</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-1 mt-md-0 review_txt_sel align-self-end">
+                        {{_form.isMendate? 'Yes' : 'No'}}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Additional Description
+                </div>
+                <div class="col-md-12 mb-1 review_txt_opt">
+                    <div class="review_txt_txtarea">
+                        {{_data.description}}
+                    </div>
+                </div>
+                <div class="col-md-12 mt-4">
+                    <div class="row">
+                        <div class="col-sm-4 mb-2">
+                            <button type="button" class="form_tab_btn form_btn_bordered" (click)="this.formTabSelected=true">Back</button>
+                        </div>
+                        <div class="col-sm-4 mb-2">
+                            <button type="button" class="form_tab_btn form_btn_dark" (click)="this.formTabSelected=true">Edit</button>
+                        </div>
+                        <div class="col-sm-4 mb-2">
+                            <button type="button" class="form_tab_btn theme_btn" (click)="SaveForm()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

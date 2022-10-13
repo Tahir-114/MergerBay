@@ -1,0 +1,67 @@
+<section class="banner_inner position-relative">
+    <div class="container position-relative">
+        <div class="form_fields_wrap mw-100 bg-white shadow_sec py-4 py-md-5 mt-4">
+            <div class="container px-lg-4">
+                <h4 class="mb-4 mb-md-5 text-center"><b>Your Personal and Company Information</b></h4>
+                <h4 class="mb-4 mb-md-5"><b>Personal Information</b></h4>
+                <form class="row profile_form"  [formGroup]="profileForm"> 
+                <div class="d-md-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center mb-4 mb-md-0">
+                        <div class="profile_image_wrap d-flex align-items-center justify-content-center me-4 p-3">
+                            <img *ngIf="profileImageURL" src="{{profileImageURL}}" class="img-fluid" alt="Mohammed Raza">
+                            <img *ngIf="!profileImageURL" src="../../../../assets/images/avatar.png" class="img-fluid" alt="Mohammed Raza">
+                        </div>
+                        <div>
+                            <input type="text" class="form-control"  formControlName="firstName">
+                            <button [routerLink]="['/edit-profile']" class="theme_btn_sm_dark">Edit Profile</button>
+                        </div>
+                    </div>
+                    
+                    <div class="clr_light">
+                        <p class="d-flex align-items-center">
+                            <img src="../../../../assets/images/envelop.png" class="img-fluid me-2" alt="Email">
+                            <input type="text" class="form-control"  formControlName="email">
+                        </p>
+                        <p class="d-flex align-items-center">
+                            <img src="../../../../assets/images/location.png" class="img-fluid me-2" alt="Email">
+                            <input type="text" class="form-control"  formControlName="location">
+                        </p>
+                        <p class="d-flex align-items-center mb-0">
+                            <img src="../../../../assets/images/smartphone.png" class="img-fluid me-2" alt="Email">
+                            <input type="text" class="form-control"  formControlName="phone">
+                        </p>
+                    </div>
+                </div>
+            </form> 
+                
+                <hr class="my-4 my-md-5">
+
+                <form class="row profile_form" [formGroup]="companyInformationForm">
+                    <div class="col-md-12">
+                        <h4 class="mb-4"><b>Company Information</b></h4>
+                    </div>
+                    <div class="col-md-6 mb-3 fs_16 clr_light">
+                        <label class="mb-2">Company Name</label>
+                        <input type="text" class="form-control" formControlName="company">
+                    </div>
+                    <div class="col-md-6 mb-3 fs_16 clr_light">
+                        <label class="mb-2">Website</label>
+                        <input type="text" class="form-control"  formControlName="website">
+                    </div>
+                    <div class="col-md-6 mb-3 fs_16 clr_light">
+                        <label class="mb-2">Designation</label>
+                        <input type="text" class="form-control" formControlName="designation">
+                    </div>
+                    <div class="col-md-6 mb-3 fs_16 clr_light">
+                        <label class="mb-2">Upload ID Card/ Passport</label>
+                        <input *ngFor="let card of cardAttachmentURLs" type="text" class="form-control"  value="{{card}}">
+                    </div>
+                    <div class="col-md-6 mb-3 fs_16 clr_light">
+                        <label class="mb-2">Upload Company Trade License</label>
+                        <input type="text" class="form-control" *ngFor="let certificate of certificateAttachmentURLs" value="{{certificate}}">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

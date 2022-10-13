@@ -1,0 +1,18 @@
+.welcome_msg {
+    background: #0C386B;
+    border-radius: 10px;
+    max-width: 860px;
+}
+.cong_msg_txt {
+    font-size: 18px;
+    color: #3A3A3A;
+    max-width: 700px;
+}
+.welcome_msg .sec_title {
+    max-width: 440px;
+    font-weight: bold;
+    font-size: 28px;
+}
+.sign_popup_btn li a {
+    min-width: 122px;
+}

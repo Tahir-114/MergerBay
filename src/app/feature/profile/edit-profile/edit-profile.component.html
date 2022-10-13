@@ -1,0 +1,229 @@
+<section class="banner_inner position-relative">
+    <div class="container position-relative">
+        <div class="form_fields_wrap mw-100 bg-white shadow_sec py-4 py-md-5 mt-4">
+            <div class="container px-lg-4">
+                <div class="row">
+                    <div class="col-md-11 mx-auto">
+                        <div class="form_inner mx-auto mw-100">
+                            <h4 class="text-center mb-4"><b>Enter your Personal and Company Information</b></h4>
+                            <ul class="nav mx-auto mb-4 nav-pills nav-fill detils-review-tabs" id="detail-review-tab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="buy-out-details-tab" data-bs-toggle="tab" data-bs-target="#buy-out-details" type="button" role="tab" aria-controls="buy-out-details" aria-selected="true" (click)="getProfile()">1 &nbsp; Personal Information</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="buy-out-review-tab" data-bs-toggle="tab" data-bs-target="#buy-out-review" type="button" role="tab" aria-controls="buy-out-review" aria-selected="false" (click)="getCompanyInformation()">2 &nbsp; Company Information</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content detils-review-content" id="detail-review-tabContent" >
+                                <div class="tab-pane fade show active" id="buy-out-details" role="tabpanel" aria-labelledby="buy-out-details-tab">
+                                    <form class="row profile_form" [formGroup]="profileForm">
+                                        <div class="col-md-12">
+                                            <div class="row align-items-end">
+                                                <div class="col-md-6 mb-4 order-md-2">
+                                                    <div class="d-md-flex align-items-center justify-content-between">
+                                                        <div class="d-flex align-items-end">
+                                                            <div class="profile_image_wrap d-flex align-items-center justify-content-center me-4 p-3">
+                                                                 <img *ngIf="profileImageURL" src="{{profileImageURL}}" class="img-fluid" alt="Mohammed Raza"> 
+                                                                <img *ngIf="!profileImageURL" src="../../../../assets/images/no_avatar.png" class="img-fluid" alt="Mohammed Raza">
+                                                            </div>
+                                                            <div>
+                                                                <input type="file" id="upload_file" class="d-none" (change)="selectProfilePicture($event)">
+                                                                <label class="theme_btn_sm_dark" for="upload_file">Browse Picture</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 order-md-1">
+                                                    <div class="mb-4 clr_light">
+                                                        <label class="mb-2">First Name <span>*</span></label>
+                                                        <input type="text" [ngClass]="name?.invalid && (name?.dirty || name?.touched) ? 'form-control field_error' :'form-control'" formControlName="firstName">
+                                                        <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="error-text">
+                                                            <div *ngIf="name?.errors?.['required']">Name is required</div>
+                                                            <div *ngIf="name?.errors?.['minlength']">Minimum 3 characters. </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-4 clr_light">
+                                                        <label class="mb-2">Last Name <span>*</span></label>
+                                                        <input type="text" class="form-control" [ngClass]="lastName?.invalid && (lastName?.dirty || lastName?.touched) ? 'field_error' :''" formControlName="lastName">
+                                                        <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)" class="error-text">
+                                                            <div *ngIf="lastName?.errors?.['required']">Last name is required</div>
+                                                            <div *ngIf="lastName?.errors?.['minlength']">Minimum 3 characters. </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light">
+                                            <label class="mb-2">Email Address</label>
+                                            <input type="email" class="form-control" [ngClass]="email?.invalid && (email?.dirty || email?.touched) ? 'field_error' :''" formControlName="email" readonly>
+                                            <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="error-text">
+                                                <div *ngIf="email?.errors?.['required']">Email is required</div>
+                                                <div *ngIf="email?.errors?.['minlength']">Minimum 3 characters. </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light">
+                                            <label class="mb-2">Country <span>*</span></label>
+                                            <ng-select class="bo_country ng-select" [ngClass]="country?.invalid && (country?.dirty || country?.touched) ? 'field_error' :''" formControlName="country" name="bo_business_loc" id="bo_business_loc" (change)="c_bo_country($event, 'bo_country')">
+                                                <ng-option *ngFor="let country of countries_list" [value]="country.id">
+                                                    {{country.name}}</ng-option>
+                                            </ng-select>
+                                            <div *ngIf="country?.invalid && (country?.dirty || country?.touched)" class="error-text">
+                                                <div *ngIf="country?.errors?.['required']">Country is required</div>
+                                                <div *ngIf="country?.errors?.['minlength']">Minimum 3 characters. </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light">
+                                            <label class="mb-2">Location</label>
+                                            <input type="text" class="form-control" [ngClass]="location?.invalid && (location?.dirty || location?.touched) ? 'field_error' :''" formControlName="location"  placeholder="Please Enter Location">
+                                            <div *ngIf="location?.invalid && (location?.dirty || location?.touched)" class="error-text">
+                                                <div *ngIf="location?.errors?.['required']">Location is required</div>
+                                                <div *ngIf="location?.errors?.['minlength']">Minimum 3 characters. </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light">
+                                            <label class="mb-2">Phone Number <span>*</span></label>
+                                            <input class="form-control" type="text"[ngClass]="phone?.invalid && (phone?.dirty || phone?.touched) ? 'field_error' :''" formControlName="phone"  placeholder="+56xxxxxxxxxx">
+                                            <div *ngIf="phone?.invalid && (phone?.dirty || phone?.touched)" class="error-text">
+                                                <div *ngIf="phone?.errors?.['required']">Phone number is required</div>
+                                                <div *ngIf="phone?.errors?.['pattern']">Enter valid phone number</div>
+                                                <div *ngIf="phone?.errors?.['minlength']">Minimum 3 characters. </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-4"></div>
+                                                <div class="col-lg-3 col-md-4 mb-4 mb-md-0"><button type="button" class="form_tab_btn w-100 form_btn_dark">Cancel</button></div>
+                                                <div class="col-lg-3 col-md-4"><button type="button" class="form_tab_btn w-100 theme_btn" (click)="saveUserProfile()">Save & Next</button></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade" id="buy-out-review" role="tabpanel" aria-labelledby="buy-out-review-tab">
+                                    <form class="row profile_form" [formGroup]="companyInformationForm">
+                                        <div class="col-12 mb-4">
+                                            <h4><b>Company Information</b></h4>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light">
+                                            <label class="mb-2">Current Company <span>*</span></label>
+                                            <input type="text" class="form-control" placeholder="Please Enter Company Detail" formControlName="company">
+                                            <div *ngIf="company?.invalid && (company?.dirty || company?.touched)" class="error-text">
+                                                <div *ngIf="company?.errors?.['required']">Company name is required</div>
+                                                <div *ngIf="company?.errors?.['minlength']">Minimum 3 characters. </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light">
+                                            <label class="mb-2">Website</label>
+                                            <input type="text" class="form-control" placeholder="Please Enter Website" formControlName="website">
+                                            <div *ngIf="website?.invalid && (website?.dirty || website?.touched)" class="error-text">
+                                                <div *ngIf="website?.errors?.['required']">Company name is required</div>
+                                                <div *ngIf="website?.errors?.['minlength']">Minimum 3 characters. </div>
+                                                <div *ngIf="website?.errors?.['pattern']">Enter valid URL. </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light">
+                                            <label class="mb-2">Designation</label>
+                                            <input type="text" class="form-control" placeholder="Please Enter Your Designation" formControlName="designation">
+                                            <div *ngIf="designation?.invalid && (designation?.dirty || designation?.touched)" class="error-text">
+                                                <div *ngIf="designation?.errors?.['required']">Designation is required</div>
+                                                <div *ngIf="designation?.errors?.['minlength']">Minimum 3 characters. </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light">
+                                            <label class="mb-2">Category <span>*</span></label>
+                                            <div class="position-relative field_wrap">
+                                                <ng-select class="bo_country ng-select" [multiple]="true" name="ep_category" id="ep_category" [ngClass]="category?.invalid && (category?.dirty || category?.touched) ? 'field_error' :''" formControlName="category" (change)="selectedCategory($event)">
+                                                   <ng-option>Select Category</ng-option>
+                                                    <ng-option *ngFor="let category of category_list" [value]="category.company_Category_ID">
+                                                        {{category.category_Name}}</ng-option>
+
+                                                </ng-select>
+                                                <div *ngIf="category?.invalid && (category?.dirty || category?.touched)" class="error-text">
+                                                    <div *ngIf="category?.errors?.['required']">Category is required</div>
+                                                </div>
+                                                <!-- <div class="filed_tooltip">
+                                                    <div class="tooltip__arrow"></div>
+                                                    Category
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-4"></div>
+                                                <div class="col-lg-3 col-md-4 mb-4 mb-md-0"><button type="button" class="form_tab_btn w-100 form_btn_dark">Cancel</button></div>
+                                                <div class="col-lg-3 col-md-4"><button type="button" class="form_tab_btn w-100 theme_btn" (click)="saveCompanyInformation()">Save & Next</button></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade" id="buy-out-review" role="tabpanel" aria-labelledby="buy-out-review-tab">
+                                    <form class="row profile_form" >
+                                        <div class="col-12 mb-4">
+                                            <h4><b>Company Information</b></h4>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light">
+                                            <label class="mb-2">Upload ID Card/Passport</label>
+                                            <input type="file" multiple class="d-none" id="upload_file_pp" (change)="selectCard($event)">
+                                            <label class="form-control upload_file_label" for="upload_file_pp"></label>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light">
+                                            <label class="mb-2">Upload Company Trade License </label>
+                                            <input type="file" multiple class="d-none" id="upload_file_tl"  (change)="selectLicense($event)">
+                                            <label class="form-control upload_file_label" for="upload_file_tl"></label>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light" *ngFor="let card of cardAttachmentURLs">
+                                            <div class="d-flex align-items-center mb-4">
+                                                <div  class="profile_image_wrap d-flex align-items-center justify-content-center me-4 p-3">
+                                                    <img src="{{card}}" class="img-fluid" alt="Mohammed Raza">
+                                                </div>
+                                                <div class="clr_light flex-grow-1">
+                                                    <div class="d-flex align-items-cener justify-content-between">
+                                                        Scanned Passport File Uploading
+                                                        <button class="btn p-0 shadow-none">
+                                                            <img src="../../../../assets/images/cancel.png" class="img-fluid" alt="Cancel">
+                                                        </button>
+                                                    </div>
+                                                    <div class="profile_upload_bar position-relative overflow-hidden my-2">
+                                                        <span [style.width]="width+'%'"></span>
+                                                    </div>
+                                                    <small>{{width}% Completed</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4 clr_light" *ngFor="let certificate of certificateAttachmentURLs">
+                                            <div class="d-flex align-items-center mb-4">
+                                                <div  class="profile_image_wrap d-flex align-items-center justify-content-center me-4 p-3">
+                                                    <img src="{{certificate}}" class="img-fluid" alt="Mohammed Raza">
+                                                </div>
+                                                <div class="clr_light flex-grow-1">
+                                                    <div class="d-flex align-items-cener justify-content-between">
+                                                        Scanned Passport File Uploading
+                                                        <button class="btn p-0 shadow-none">
+                                                            <img src="../../../../assets/images/cancel.png" class="img-fluid" alt="Cancel">
+                                                        </button>
+                                                    </div>
+                                                    <div class="profile_upload_bar position-relative overflow-hidden my-2">
+                                                        <span  [style.width]="width+'%'"></span>
+                                                    </div>
+                                                    <small>{{width}}'%' Completed</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-4"></div>
+                                                <div class="col-lg-3 col-md-4 mb-4 mb-md-0"><button type="button" class="form_tab_btn w-100 form_btn_dark">Cancel</button></div>
+                                                <div class="col-lg-3 col-md-4"><button type="button" class="form_tab_btn w-100 theme_btn" (click)="saveCompanyInformation()">Update Information</button></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

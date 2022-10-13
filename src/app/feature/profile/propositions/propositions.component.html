@@ -1,0 +1,143 @@
+<section class="banner_inner position-relative">
+    <div class="container position-relative">
+        <div class="form_fields_wrap mw-100 bg-white shadow_sec py-4 py-md-5 mt-4">
+            <div class="container px-lg-4">
+                <h4 class="mb-4"><b>Propotions</b></h4>
+                <div class="container px-lg-4">
+                   
+                    <div class="row">
+                        <div class="col-md-2 mb-4 mb-md-0">
+                            <p class="mb-md-4 mb-2"><b>Deal Title</b></p>
+                        </div>
+                        <div class="col-md-2 mb-4 mb-md-0">
+                            <p class="mb-md-4 mb-2"><b>Status</b></p>
+                        </div>
+                        <div class="col-md-2 mb-4 mb-md-0">
+                            <p class="mb-md-4 mb-2"><b>Date</b></p>
+                        </div>
+                        <div class="col-md-6 mb-4 mb-md-0">
+                            <p class="mb-md-4 mb-2"><b>Deal Type</b></p>
+                        </div>
+                    </div>
+                    <div class="row align-items-center" style="margin-top:5px;" *ngFor="let item of propositionsList">
+                        <div class="col-md-2 mb-2">
+                            <p class="mb-0">
+                                {{item.title}}
+                            </p>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <p class="mb-0 d-flex align-items-center">
+                                <!-- <img src="../../../../assets/images/add_status.png" class="img-fluid me-1" alt="Add"> -->
+                                <img src="../../../../assets/images/check_status.png" class="img-fluid me-1" alt="Approved">
+                                {{item.status}}
+                            </p>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <p class="mb-0">
+                                {{item.created_Date | date:'dd-MM-yyyy'}}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <p class="mb-0 d-flex align-items-center">
+                                <span class="me-3">
+                                    {{item.type}} | {{item.subType}}
+                                </span>
+                                <img src="../../../../assets/images/add_file_status.png" class="img-fluid me-3 ms-auto" alt="Approved">
+                                |
+                                <button class="theme_btn_sm ms-3">Deal Room</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sec_space">
+                    <div class="add_prop_benifts text-white p-5 rounded_sec bg-white shadow_sec">
+                        <h4>
+                            Add more proposition to get more 
+                            benefits from platform.
+                        </h4>
+                        <p>
+                            Mergers Bay connecting deals with the click of a button! Add your propositions
+                            here to access 7000+ qualified, curated, verified, live requirements that are
+                            waiting for you. 
+                        </p>
+                        <a href="#." class="theme_btn_sm">Add Proposition</a>
+                    </div>
+                </div>
+                <ngx-slick-carousel class="carousel propotion_slider" #slickModal="slick-carousel" [config]="slideConfig">
+					<div ngxSlickItem *ngFor="let slide of slides" class="slide">
+						<div>
+							<div class="deals_slide_wrap mx-auto mb-5"
+								[ngClass]="slide.type == 'Sell' ? 'sold_deal' : 'acq_deal'">
+								<div class="deal_slide_header px-3 py-2">
+									{{slide.projectName}}
+									<br>
+									USD 26M/USD 3M seeking buyers.
+									<br>
+									<div class="d-flex align-items-center text-white">
+										<img src="../../../../assets/images/user.png" class="img-fluid me-2" alt="user">
+										{{slide.userName}}
+									</div>
+								</div>
+								<div class="deal_slide_content position-relative bg-white">
+									<div class="deal_stamp">
+										<img src="../../../../assets/images/sold_tag.png" class="img-fluid" alt="acquired">
+									</div>
+									<div class="py-2 px-3">
+										<p class="mb-1 fw_sb">Region</p>
+										<p class="font-weight-normal mb-0">{{slide.businessLocation}}</p>
+									</div>
+                                    <div *ngIf="slide?.subType == formTypeCommercial then commercial else soldout"></div>
+                                    <ng-template #soldout>
+                                        <div class="px-3 py-3 sector_bg">
+                                            <p class="mb-1 fw_sb">Sector</p>
+                                            <p class="font-weight-normal mb-0">{{slide.sectors}}</p>
+                                        </div>
+                                        <div class="px-3 py-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <p class="mb-1 fw_sb">Revenue</p>
+                                                    <p class="font-weight-normal mb-0">US$ {{slide.revenue}}M</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-1 fw_sb">EBITDA</p>
+                                                    <p class="font-weight-normal mb-0">US$ {{slide.ebitda}}M</p>
+                                                </div>
+                                            </div>
+                                            <p class="my-3">
+                                                {{slide.description}}
+                                            </p>
+                                            <a class="deal_btn mx-auto mb-0" [routerLink]="['/propotion-reivew',slide.type,slide.formId]">View Details</a>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template #commercial>
+                                        <div class="px-3 py-3 sector_bg">
+                                            <p class="mb-1 fw_sb">Property</p>
+                                            <p class="font-weight-normal mb-0">{{slide.property}}</p>
+                                        </div>
+                                        <div class="px-3 py-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <p class="mb-1 fw_sb">Property Value</p>
+                                                    <p class="font-weight-normal mb-0">US$ {{slide.propertyValue}}M</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-1 fw_sb">Annual Gross Income</p>
+                                                    <p class="font-weight-normal mb-0">US$ {{slide.annualGrossIncome}}M</p>
+                                                </div>
+                                            </div>
+                                            <p class="my-3">
+                                                {{slide.description}}
+                                            </p>
+                                            <a class="deal_btn mx-auto mb-0" [routerLink]="['/propotion-reivew',slide.type,slide.formId]">View Details</a>
+                                        </div>
+                                    </ng-template>
+								</div>
+							</div>
+						</div>
+					</div>
+				</ngx-slick-carousel>
+            </div>
+        </div>
+    </div>
+</section>

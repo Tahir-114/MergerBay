@@ -1,0 +1,25 @@
+.subsector_title {
+    background: #E8E6E6;
+    padding: 7px 15px;
+}
+.subsectors_cats {
+    padding: 3px 7px ;
+}
+.subsectors_cats label {
+    cursor: pointer;
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+    margin: 4px;
+    border: 1px solid #E8E6E6;
+}
+.subsectors_cats label img {
+    transform: rotate(45deg);
+}
+.subsectors_cats label.subsector_cat_active {
+    background: #E8E6E6;
+}
+.subsectors_cats label.subsector_cat_active img {
+    transform: rotate(0);
+}

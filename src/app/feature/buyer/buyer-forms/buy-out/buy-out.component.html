@@ -1,0 +1,546 @@
+<div class="form_inner mx-auto">
+    <h4 class="text-center">{{FormType}}</h4>
+    <p class="text-center small">Enter your requirements and provide as much detail as you
+        can.
+    </p>
+    <ul class="nav mx-auto mb-4 nav-pills nav-fill detils-review-tabs" id="detail-review-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" [ngClass]="{'active':formTabSelected}"  id="buy-out-details-tab" data-bs-toggle="tab"
+             data-bs-target="#buy-out-details" type="button" role="tab"
+             [attr.aria-selected]="formTabSelected" (click)="this.formTabSelected=true"
+             aria-controls="buy-out-details"
+              aria-selected="true">
+              1 Enter Proposition Details</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" [ngClass]="{'active':!formTabSelected}" id="buy-out-review-tab" data-bs-toggle="tab" 
+            data-bs-target="#buy-out-review" type="button" role="tab" aria-controls="buy-out-review" 
+            [attr.aria-selected]="formTabSelected" [disabled]="!this.form.valid" (click)="review()"
+            aria-selected="false">
+            2 Review and Submit</button>
+        </li>
+    </ul>
+    <div class="tab-content detils-review-content" id="detail-review-tabContent">
+        <div class="tab-pane fade" [ngClass]="{'show active' : formTabSelected}" id="buy-out-details" role="tabpanel"
+            aria-labelledby="buy-out-details-tab">
+            <form [formGroup]="form">
+                <div class="mb-3">
+                    <label class="form-label">Your Business Location / Headquarters<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select 
+                        [ngClass]="{'field_error':validate('businessLocation_Id')}" formControlName="businessLocation_Id"
+                        [class]="bo_country" name="bo_business_loc" id="bo_business_loc" (change)="c_bo_country($event, 'bo_country')">
+                            <ng-option *ngFor="let country of countries_list" [value]="country.country_Id">
+                                {{country.name}}</ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Business Location
+                        </div>
+                    </div>
+                    <div *ngIf="validate('businessLocation_Id')" id="error" class="error-text">
+                        <div *ngIf="form.get('businessLocation_Id')?.errors?.['required']">
+                            Business Location Required
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Country you are Interested in<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select [ngClass]="bo_inst_country" name="bo_intr_loc" id="bo_intr_loc"
+                        [ngClass]="{'field_error':validate('country_Ids')}" formControlName="country_Ids"
+                            (change)="c_bo_inst_country($event, '#bo_inst_country')">
+                            <ng-option *ngFor="let country of countries_list" [value]="country.country_Id">
+                                {{country.name}}
+                            </ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                             Country You're Interest In
+                        </div>
+                    </div>
+                    <div *ngIf="validate('country_Ids')" id="error" class="error-text">
+                        <div *ngIf="form.get('country_Ids')?.errors?.['required']">
+                            Business Location Required
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Select City <span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select
+                        [ngClass]="{'field_error':validate('city_Id')}" formControlName="city_Id">
+                        <ng-option *ngFor="let city of cities_list" [value]="city.city_Id">
+                            {{city.name}}
+                        </ng-option>
+                    </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Select City 
+                        </div>
+                    </div>
+                    <div *ngIf="validate('city_Id')" id="error" class="error-text">
+                        <div *ngIf="form.get('city_Id')?.errors?.['required']">
+                            City is Required
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 sub_cat_wrap">
+                    <label class="form-label">Sector(s) you are interested in<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select 
+                        [ngClass]="{'field_error':validate('sector_Ids')}" formControlName="sector_Ids"
+                        [multiple]="true" (change)="load_sectors($event)">
+                            <ng-option *ngFor="let sector_interested of sectors_interested" [value]="sector_interested.sectorId">
+                                {{sector_interested.sectorName}}
+                            </ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Sectors You are interested in
+                        </div>
+                    </div>
+                    <div *ngIf="validate('sector_Ids')" id="error" class="error-text">
+                        <div *ngIf="form.get('sector_Ids')?.errors?.['required']">
+                            Please Select Sectors
+                        </div>
+                    </div>
+                    <div class="sub_selection_sec" *ngIf="showSubSectors">
+                        <div class="mb-3">
+                            <label class="form-label">Subsector(s) you are interested in<span>*</span></label>
+                            <div class="sub_selection_inner">
+                                <app-buyer-subsectors [sectorsArray]="sectorsArr"></app-buyer-subsectors>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngIf="showTransactionType then transactionType1 else OwnerShipPrefs1"></ng-container>
+                <ng-template class="mb-3" #transactionType1>
+                    <label class="form-label">Transaction type <span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select
+                        [ngClass]="{'field_error':validate('transactionType_Id')}" formControlName="transactionType_Id"
+                        bindLabel="trans_type">
+                            <ng-option *ngFor="let item of transactionTypes_list" [value]="item.transactionType_Id">
+                                {{item.name}}
+                            </ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Select Transaction Type
+                        </div>
+                    </div>
+                    <div *ngIf="validate('transactionType_Id')" id="error" class="error-text">
+                        <div *ngIf="form.get('transactionType_Id')?.errors?.['required']">
+                            Transaction Type is Required
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template class="mb-3" #OwnerShipPrefs1 >
+                    <label class="form-label">Ownership Preference <span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select 
+                        [ngClass]="{'field_error':validate('pref_Id')}" formControlName="pref_Id"
+                        bindLabel="ownershipt_pref">
+                            <ng-option *ngFor="let item of ownershiptPref_list" [value]="item.pref_Id">
+                                {{item.name}}</ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Select OwnerShip Preference
+                        </div>
+                    </div>
+                    <div *ngIf="validate('pref_Id')" id="error" class="error-text">
+                        <div *ngIf="form.get('pref_Id')?.errors?.['required']">
+                            OwnerShip Preference is Required
+                        </div>
+                    </div>
+                </ng-template>
+                <div class="mb-3">
+                    <label class="form-label">Valuation Preference <span>*</span></label>
+                    <div class="row align-items-center">
+                        <div class="col-md-5">
+                            <div class="position-relative input_curr_sign field_wrap">
+                                <span>AED</span>
+                                <input type="text" class="form-control field_error"
+                                (ngModelChange)="valuationPreferenceFromConverted =  CalculateCurrency($event)"
+                                [ngClass]="{'field_error': validate('valuationPreferenceFrom') || (form.get('valuationPreferenceFrom')?.errors?.['NaN']) }"
+                                formControlName="valuationPreferenceFrom"
+                                placeholder="30000">
+                                <div class="filed_tooltip">
+                                    <div class="tooltip__arrow"></div>
+                                    Minumum Valuation Preference
+                                </div>
+                            </div>
+                            <span class="input_curr_val">$ {{valuationPreferenceFromConverted | number : '1.2-4'}}</span>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="position-relative input_curr_sign field_wrap">
+                                <span>AED</span>
+                                <input type="text" class="form-control"
+                                (ngModelChange)="valuationPreferenceToConverted =  CalculateCurrency($event)"
+                                [ngClass]="{'field_error': validate('valuationPreferenceTo') || (form.get('valuationPreferenceTo')?.errors?.['NaN']) }"
+                                formControlName="valuationPreferenceTo"
+                                placeholder="500000">
+                                <div class="filed_tooltip">
+                                    <div class="tooltip__arrow"></div>
+                                    Maximum Valuation Preference
+                                </div>
+                            </div>
+                            <span class="input_curr_val">$ {{valuationPreferenceToConverted | number : '1.2-4'}}</span>
+                        </div>
+                        <div class="col-md-2"><label>Millions</label></div>
+                    </div>
+                    <div *ngIf="validate('valuationPreferenceTo')" id="error" class="error-text">
+                        <div *ngIf="form.get('valuationPreferenceTo')?.errors?.['LessThan']">
+                            Value must be grater
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Investment Values <span>*</span></label>
+                    <div class="row align-items-center">
+                        <div class="col-md-5">
+                            <div class="position-relative input_curr_sign field_wrap">
+                                <span>AED</span>
+                                <input type="text" class="form-control"
+                                (ngModelChange)="investmentValueFromConverted =  CalculateCurrency($event)"
+                                [ngClass]="{'field_error': validate('investmentValueFrom') || (form.get('investmentValueFrom')?.errors?.['NaN']) }"
+                                formControlName="investmentValueFrom"
+                                placeholder="30000">
+                                <div class="filed_tooltip">
+                                    <div class="tooltip__arrow"></div>
+                                    Minumum Investment Value
+                                </div>
+                            </div>
+                            <span class="input_curr_val">$ {{investmentValueFromConverted | number : '1.2-4'}}</span>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="position-relative input_curr_sign field_wrap">
+                                <span>AED</span>
+                                <input type="text" class="form-control"
+                                (ngModelChange)="investmentValueToConverted =  CalculateCurrency($event)"
+                                [ngClass]="{'field_error': validate('investmentValueTo') || (form.get('investmentValueTo')?.errors?.['NaN']) }"
+                                formControlName="investmentValueTo"
+                                placeholder="500000">
+                                <div class="filed_tooltip">
+                                    <div class="tooltip__arrow"></div>
+                                    Maximum Investment Value
+                                </div>
+                            </div>
+                            <span class="input_curr_val">${{investmentValueToConverted | number : '1.2-4'}}</span>
+                        </div>
+                        <div class="col-md-2"><label>Millions</label></div>
+                    </div>
+                    <div *ngIf="validate('investmentValueTo')" id="error" class="error-text">
+                        <div *ngIf="form.get('investmentValueTo')?.errors?.['LessThan']">
+                            Value must be grater
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Revenue Preference <span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select class="field_error" 
+                        [ngClass]="{'field_error':validate('revenue_Id')}" formControlName="revenue_Id">
+                            <ng-option *ngFor="let item of revenuePref_list" [value]="item.revenue_Id">
+                                {{item.name}}
+                            </ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Revenue Preference
+                        </div>
+                    </div>
+                    <div *ngIf="validate('revenue_Id')" id="error" class="error-text">
+                        <div *ngIf="form.get('revenue_Id')?.errors?.['required']">
+                            Revenue Preference Required
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">EBITDA Preference Minimum <span>*</span></label>
+                    <div class="position-relative input_percent_sign field_wrap">
+                        <input type="text"
+                        [ngClass]="{'field_error':validate('eBITDA')}" formControlName="eBITDA"
+                        class="form-control">
+                        <span>%</span>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                             Enter EBITDA Minimum
+                        </div>
+                    </div>
+                    <div *ngIf="validate('eBITDA')" id="error" class="error-text">
+                        <div *ngIf="form.get('eBITDA')?.errors?.['required']">EBITDA Required</div>
+                        <div *ngIf="form.get('eBITDA')?.errors?.['NaN']">Enter a Valid Amount</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Net Profit Preference Minimum<span>*</span></label>
+                    <div class="position-relative input_percent_sign field_wrap">
+                        <input type="text"
+                        [ngClass]="{'field_error':validate('netProfit')}" formControlName="netProfit"
+                        class="form-control">
+                        <span>%</span>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                             Enter Net Profit Preference Minimum
+                        </div>
+                    </div>
+                    <div *ngIf="validate('netProfit')" id="error" class="error-text">
+                        <div *ngIf="form.get('netProfit')?.errors?.['required']">
+                            Net Profit Required
+                        </div>
+                        <div *ngIf="form.get('netProfit')?.errors?.['NaN']">Enter a Valid Amount</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-md-inline-flex position-relative field_wrap">
+                        <label class="form-label me-3 mb-0">Do you required any financing?<span>*</span></label>
+                        <div class="form-check form-check-inline mb-0">
+                            <label class="form-check-label" for="req_fin_y">
+                                <input class="form-check-input" type="radio" name="isFinancingRequired" formControlName="isFinancingRequired" id="req_fin_y" [value]="true">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline mb-0">
+                            <label class="form-check-label" for="req_fin_n">
+                                <input class="form-check-input" type="radio" name="isFinancingRequired" formControlName="isFinancingRequired" id="req_fin_n" [value]="false">
+                                No
+                            </label>
+                        </div>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Select yes If You required Financing.
+                        </div>
+                    </div>
+                    <div *ngIf="(submitted && form.get('isFinancingRequired')?.errors)" id="error" class="error-text">
+                        Please Select Value
+                    </div>
+                </div>
+                <div class="mb-3 sub_cat_wrap">
+                    <label class="form-label">Your role in the Transaction<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select (change)="load_Mendate($event)"  name="transaction_role" [ngClass]="{'field_error':validate('transactionRole_Id')}"  formControlName="transactionRole_Id">
+                            <ng-option *ngFor="let transaction_role of transaction_roles" [value]="transaction_role.role_Id">
+                                {{transaction_role.name}}</ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                             Select Transaction Role
+                        </div>
+                    </div>
+                    <div *ngIf="validate('transactionRole_Id')" id="error" class="error-text">
+                        <div *ngIf="form.get('transactionRole_Id')?.errors?.['required']">
+                            Please Select Transaction Role
+                        </div>
+                    </div>
+                    <div class="sub_selection_sec" *ngIf="showMendate">
+                        <div class="mb-3">
+                            <div class="d-md-flex align-items-center pt-4">
+                                <label class="form-label d-block d-md-inline-block me-md-3">Do you have a
+                                    Mandate<span>*</span></label>
+                                <div class="form-check form-check-inline mb-0">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" formControlName="isMendate"  id="mandate_y" [value]="true">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline mb-0">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" formControlName="isMendate" id="mandate_n" [value]="false">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div *ngIf="(submitted && form.get('isMendate')?.errors)" id="error" class="error-text">
+                                Please Select Value
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Additional Description<span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <textarea class="form-control" [ngClass]="{'field_error':validate('description')}" formControlName="description" name="so_additional_description" placeholder="Brief, competition, and market size etc."></textarea>
+                        <div *ngIf="form.get('description')?.errors" class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>   
+                            Detailed Description 
+                        </div>
+                    </div>
+                    <div *ngIf="validate('description')" id="error" class="error-text">
+                        <div *ngIf="form.get('description')?.errors?.['required']">
+                            Enter Description
+                            </div> 
+                           <div *ngIf="form.get('description')?.errors?.['minlength']">
+                            Description Must be greater than 10 words
+                           </div>  
+                    </div>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" formControlName="termsAndConditions" type="checkbox" value="" id="agree_check">
+                    <label class="form-check-label" for="agree_check">
+                        Agreed To Terms and Conditions *
+                    </label>
+                    <div id="error" class="error-text" *ngIf="submitted && form.get('termsAndConditions')?.value===false ">
+                        Please Agree to Terms and Conditions
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 mb-2">
+                        <button type="button" class="form_tab_btn form_btn_bordered" (click)="cancel()" >Cancel</button>
+                    </div>
+                    <div class="col-sm-4 mb-2">
+                        <button type="button" class="form_tab_btn form_btn_dark" *ngIf="false">Save as
+                            Draft</button>
+                    </div>
+                    <div class="col-sm-4 mb-2">
+                        <button type="button" class="form_tab_btn theme_btn" (click)="review()" >Next</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" [ngClass]="{'show active' : !formTabSelected}" id="buy-out-review" role="tabpanel"
+            aria-labelledby="buy-out-review-tab">
+            <div class="row mb-3">
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Your Business Location / Headquarters
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.location}}
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Country you are Interested in
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.country}}
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Select City
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.city}} - {{_data.country}}
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-6 review_txt_opt">
+                        Sector(s) you are interested in*
+                    </div>
+                    <div class="col-md-6 review_txt_opt">
+                        {{_data.sectors}}
+                    </div>
+                    <div class="col-md-12 mt-1 review_txt_sel" *ngIf="showSubSectors">
+                        <div class="sub_selection_sec">
+                            <div class="mb-3">
+                                <label class="form-label">Subsector(s) you are interested in
+                                    <span>*</span></label>
+                                <div class="sub_selection_inner">
+                                    <app-buyer-subsectors [isDisabled]="true" [sectorsArray]="selectedSectorsArray"></app-buyer-subsectors>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngIf="showTransactionType then transactionType else OwnerShipPrefs"></ng-container>
+                <ng-template #transactionType>
+                    <div class="col-md-6 mb-1 review_txt_opt">
+                        Transaction Type
+                    </div>
+                    <div class="col-md-6 mb-4 review_txt_sel">
+                        {{_data.transactionType}}
+                    </div>
+                </ng-template>
+                <ng-template #OwnerShipPrefs >
+                    <div class="col-md-6 mb-1 review_txt_opt">
+                        Ownership Preference
+                    </div>
+                    <div class="col-md-6 mb-4 review_txt_sel">
+                        {{_data.ownerShipPreference}}
+                    </div>
+                </ng-template>
+
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Valuation Preference
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.valuationPreferenceFrom}} Million  -  {{_data.valuationPreferenceTo}} Million
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Investment Values
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.investmentValueFrom}} Million  -  {{_data.investmentValueTo}} Million
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Revenue Preference
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.revenuePreference}} Million
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    EBITDA Preference Minimum
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.eBITDA}}%
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Net Profit Preference Minimum
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                    {{_data.netProfit}}%
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Do you required any financing?
+                </div>
+                <div class="col-md-6 mb-4 review_txt_sel">
+                   {{_data.isFinancingRequired? 'Yes': 'No'}}
+                </div>
+                <div class="row">
+                    <div class="col-md-6 review_txt_opt">
+                        Your role in the Transaction
+                    </div>
+                       <div class="col-md-6 review_txt_sel">
+                           {{_data.role}}
+                       </div>
+                   </div>
+                <div class="row mb-4" *ngIf="showMendate">
+                    <div class="col-md-6 review_txt_opt">
+                        <div class="sub_selection_sec">
+                            <div class="">
+                                <div class="d-md-flex align-items-center pt-4">
+                                    <label class="form-label mb-0">Do you have a
+                                        Mandate<span>*</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-1 mt-md-0 review_txt_sel align-self-end">
+                        {{_form.isMendate? 'Yes' : 'No'}}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-1 review_txt_opt">
+                    Additional Description
+                </div>
+                <div class="col-md-12 mb-1 review_txt_opt">
+                    <div class="review_txt_txtarea">
+                        {{_data.description}}
+                    </div>
+                </div>
+                <div class="col-md-12 mt-4">
+                    <div class="row">
+                        <div class="col-sm-4 mb-2">
+                            <button type="button" 
+                            (click)="this.formTabSelected=true"
+                            class="form_tab_btn form_btn_bordered">Back</button>
+                        </div>
+                        <div class="col-sm-4 mb-2">
+                            <button type="button" class="form_tab_btn form_btn_dark" (click)="this.formTabSelected=true">Edit</button>
+                        </div>
+                        <div class="col-sm-4 mb-2">
+                            <button type="button" class="form_tab_btn theme_btn" (click)="SaveForm()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

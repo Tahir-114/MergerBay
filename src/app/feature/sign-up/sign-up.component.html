@@ -1,0 +1,172 @@
+<!-- banner -->
+<section class="banner_inner position-relative overflow-hidden">
+    <div class="container my-5 position-relative">
+        <!-- Congratulation Message -->
+        <div *ngIf="welcome_msg" class="welcome_msg mx-auto text-center shadow_sec">
+            <div class="py-md-5 py-4 text-white container-fluid">
+                <img src="../../../assets/images/welcome.png" class="im-fluid mx-auto mb-4 d-block" alt="Welcome">
+                <p class="mb-0">Congratulations!</p>
+                <h3 class="sec_title mx-auto text-center mb-0">Your Account has been <span>Created.</span></h3>
+            </div>
+            <div class="py-md-5 py-4 bg-white container-fluid">
+                <div class="cong_msg_txt mx-auto">
+                    Congratulations! your account has been created successfully. Just fill up the
+                    requirements we need in the forms from you regarding you are buying or selling
+                    the business etc. And get best offers from the sellers and buyer. CHEERS!
+                </div>
+            </div>
+        </div>
+        <div *ngIf="finised_data" class="welcome_msg mx-auto text-center shadow_sec">
+            <div class="py-md-5 py-4 text-white container-fluid">
+                <img src="../../../assets/images/doc.png" class="im-fluid mx-auto mb-4 d-block" alt="Welcome">
+                <p class="mb-0">Thank you!</p>
+                <h3 class="sec_title mx-auto text-center mb-0">We Received your Data, Just
+                    Wait for approval from our team.</h3>
+            </div>
+            <div class="py-md-5 py-4 bg-white container-fluid">
+                <div class="row">
+                    <div class="cong_msg_txt mx-auto col-lg-9 mx-auto">
+                        We've Collected your data and our team will be checked all the values
+                        etc. Keep calm and wait for the positive response. THANKS!
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Congratulation Message - end  /-->
+
+        <!-- form -->
+        <div *ngIf="login_page" class="login_form_wrap py-5 px-3" [formGroup]="signupForm">
+            <div class="login_form_inner mx-auto">
+                <h1 class="sec_title text-center"><span>Sign Up</span> into Merger's Bay.</h1>
+                <p class="text-center">Enter your requirements and provide as much detail as you can.</p>
+                <div class="mb-3">
+                    <label class="form-label">First Name <span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <input type="text" [ngClass]="name?.invalid && (name?.dirty || name?.touched) ? 'form-control field_error' :'form-control'" formControlName="firstname">
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Please Enter Your First Name
+                        </div>
+                    </div>
+                    <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="error-text">
+                        <div *ngIf="name?.errors?.['required']">Name is required</div>
+                        <div *ngIf="name?.errors?.['minlength']">Minimum 3 characters. </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Last Name <span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <input type="text" [ngClass]="lastName?.invalid && (lastName?.dirty || lastName?.touched) ? 'form-control field_error' :'form-control'" formControlName="lastname">
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Please Enter Your Last Name
+                        </div>
+                    </div>
+                    <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)" class="error-text">
+                        <div *ngIf="lastName?.errors?.['required']">Last Name is required</div>
+                        <div *ngIf="lastName?.errors?.['minlength']">Minimum 3 characters. </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email <span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <input type="email" [ngClass]="email?.invalid && (email?.dirty || email?.touched) ? 'form-control field_error' :'form-control'" formControlName="email">
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Please enter your official email address for quicker verification
+                        </div>
+                    </div>
+                    <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="error-text">
+                        <div *ngIf="email?.errors?.['required']">Password is required</div>
+                        <div *ngIf="email?.errors?.['email']">Enter a Valid email Address</div>
+                    </div>
+                    <div *ngIf="submitted">
+                        <div *ngIf="existingUserMessage" class="text-danger">{{existingUserMessage}}</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password <span>*</span></label>
+                    <div class="password_field_wrap position-relative field_wrap">
+                        <input [type]="show_password ? 'text' : 'password'" [ngClass]="password?.invalid && (password?.dirty || password?.touched) ? 'form-control field_error' :'form-control'" formControlName="password">
+                        <button (click)="show_password = !show_password" class="btn p-0 shadow-none">
+                            <img src="../../../assets/images/eye.png" alt="Show Password" *ngIf="!show_password">
+                            <img src="../../../assets/images/eye2.png" alt="Show Password" *ngIf="show_password">
+                        </button>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Please Enter Your Password
+                        </div>
+                    </div>
+                    <div *ngIf="submitted || (password?.invalid && (password?.dirty || password?.touched))" class="error-text">
+                        <div *ngIf="password?.errors?.['required']">Password is required</div>
+                        <div *ngIf="password?.errors?.['minlength']">Minimum 8 characters. </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Confirm Password <span>*</span></label>
+                    <div class="password_field_wrap position-relative field_wrap">
+                        <input [type]="confirm_password ? 'text' : 'password'" [ngClass]="matchedPassword?.invalid && (matchedPassword?.dirty || matchedPassword?.touched) ? 'form-control field_error' :'form-control'" formControlName="confirmPassword">
+                        <button (click)="confirm_password = !confirm_password" class="btn p-0 shadow-none">
+                            <img src="../../../assets/images/eye.png" alt="Show Password" *ngIf="!confirm_password">
+                            <img src="../../../assets/images/eye2.png" alt="Show Password" *ngIf="confirm_password">
+                        </button>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Please Enter Your Confirm Password
+                        </div>
+                    </div>
+                    <div *ngIf="submitted || (matchedPassword?.invalid && (matchedPassword?.dirty || matchedPassword?.touched))" class="error-text">
+                        <div *ngIf="matchedPassword?.errors?.['required']">Confirm Password is required</div>
+                        <div *ngIf="matchedPassword?.errors?.['minlength']">Minimum 8 characters. </div>
+                        <div *ngIf="matchedPassword?.errors?.['mustMatch']">Passwords must match</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Country <span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <ng-select [ngClass]="country?.invalid && (country?.dirty || country?.touched) ? 'bo_country field_error' :'bo_country'" name="bo_business_loc" id="bo_business_loc" (change)="c_bo_country($event, 'bo_country')" formControlName="country">
+                            <ng-option *ngFor="let country of countries_list" [value]="country.id">
+                                {{country.name}}</ng-option>
+                        </ng-select>
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Please Select Your Country
+                        </div>
+                    </div>
+                    <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Phone Number <span>*</span></label>
+                    <div class="position-relative field_wrap">
+                        <input type="number" [ngClass]="phone?.invalid && (phone?.dirty || phone?.touched) ? 'form-control field_error' :'form-control'" formControlName="phone">
+                        <div class="filed_tooltip">
+                            <div class="tooltip__arrow"></div>
+                            Please Enter Your Phone Number
+                        </div>
+                    </div>
+                    <div *ngIf="phone?.invalid && (phone?.dirty || phone?.touched)" class="error-text">
+                        <div *ngIf="phone?.errors?.['required']">Phone No is required</div>
+                    </div>
+                    <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-check-inline">
+                        <label for="signup_agree" class="form-check-label">
+                            <input type="checkbox" name="signup_agree" id="signup_agree" value="1" [ngClass]="tc?.invalid && (tc?.dirty || tc?.touched) ? 'form-check-input custom_radio field_error' :'form-check-input custom_radio'" formControlName="accepted">
+
+                            I Agree to all Mergers Bay <a href="" class="text-decoration-none">Term & Services</a> and <a href="" class="text-decoration-none">Privacy Policy</a>.
+                        </label>
+                        <div *ngIf="tc?.invalid && (tc?.dirty || tc?.touched)" class="error-text">
+                            <div *ngIf="tc?.errors?.['required']">Please Agree To Terms and Conditions</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 mt-5 pt-md-4 text-center">
+                    <button class="theme_btn" (click)="userSignUP()">Sign Up</button>
+                </div>
+            </div>
+        </div>
+        <!-- form - end /-->
+    </div>
+</section>
+<!-- banner - end /-->

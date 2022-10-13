@@ -1,0 +1,73 @@
+<ngx-slick-carousel class="carousel buy_slider animate__fadeInUp" #slickModal="slick-carousel"
+[config]="slideConfig">
+<div ngxSlickItem *ngFor="let slide of slides" class="slide">
+    <!-- <div class="deals_slide_wrap mx-auto" [ngClass]="slide.type == 'sold' ? 'sold_deal' : 'acq_deal'"> -->
+        <div class="deals_slide_wrap mx-auto acq_deal">
+        <div class="deal_slide_header p-3">
+            {{slide.countriesInterested}} - {{slide.city}}
+            <br>
+            USD 26M/USD 3M seeking buyers.
+            <br>
+            <div class="d-flex align-items-center text-white">
+                <img src="../../../../assets/images/user.png" class="img-fluid me-2" alt="user">
+                {{slide.userName}}
+            </div>
+        </div>
+        <div class="deal_slide_content position-relative bg-white">
+            <div class="deal_stamp">
+                <img src="../../../../assets/images/acquired_tag.png" class="img-fluid" alt="acquired">
+            </div>
+            <div class="px-3 pt-4 pb-3">
+                <p class="mb-1 fw_sb">Region</p>
+                <p class="font-weight-normal mb-0">{{slide.businessLocation}}</p>
+            </div>
+            <div *ngIf="slide?.subType == formTypeCommercial then commercial else soldout"></div>
+            <ng-template #soldout>
+                <div class="px-3 py-3 sector_bg">
+                    <p class="mb-1 fw_sb">Sector</p>
+                    <p class="font-weight-normal mb-0">{{slide.sectors}}</p>
+                </div>
+                <div class="px-3 py-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="mb-1 fw_sb">Revenue</p>
+                            <p class="font-weight-normal mb-0">US$ {{slide.netProfit}}M</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="mb-1 fw_sb">EBITDA</p>
+                            <p class="font-weight-normal mb-0">US$ {{slide.ebitda}}M</p>
+                        </div>
+                    </div>
+                    <p class="my-3">
+                        {{slide.description}}
+                    </p>
+                    <a class="deal_btn mx-auto mb-0" [routerLink]="['/propotion-reivew',slide.type,slide.buyOut_Id]">View Details</a>
+                </div>
+            </ng-template>
+            <ng-template #commercial>
+                <div class="px-3 py-3 sector_bg">
+                    <p class="mb-1 fw_sb">Property</p>
+                    <p class="font-weight-normal mb-0">{{slide.property}}</p>
+                </div>
+                <div class="px-3 py-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="mb-1 fw_sb">Property Value From</p>
+                            <p class="font-weight-normal mb-0">US$ {{slide.propertyValueFrom}}M</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="mb-1 fw_sb">Property Value To</p>
+                            <p class="font-weight-normal mb-0">US$ {{slide.propertyValueTo}}M</p>
+                        </div>
+                    </div>
+                    <p class="my-3">
+                        {{slide.description}}
+                    </p>
+                    <a class="deal_btn mx-auto mb-0" [routerLink]="['/propotion-reivew',slide.type,slide.buyOut_Id]">View Details</a>
+                    <!-- <a class="deal_btn mx-auto mb-0" [routerLink]="['/propotion-reivew',slide.buyOut_Id, slide.type]" [state]="{ data: slide}">View Details</a> -->
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>
+</ngx-slick-carousel>

@@ -1,0 +1,49 @@
+<!-- <div *ngFor="let parent of subsectors_array | keyvalue">
+    <div *ngFor="let cat of parent.value">
+        <div class="subsector_title d-flex align-items-center justify-content-between">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="customCheck{{parent.key}}">
+                <label class="form-check-label" for="customCheck{{parent.key}}">
+                    {{cat.name}}
+                </label>
+            </div>
+
+            Materials
+        </div>
+        <div class="d-flex flex-wrap align-items-center subsectors_cats">
+            <div *ngFor="let item of cat.items | keyvalue">
+                <label *ngFor="let i of item.value" class="d-flex align-items-center"[ngClass]="i.status == 'active' ? 'subsector_cat_active': ''">                    
+                    <input *ngIf="i.status == 'active'" type="checkbox" class="d-none" (change)="changeCatStatus(parent.key, item.key)" checked>
+                    <input *ngIf="i.status != 'active'" type="checkbox" class="d-none" (change)="changeCatStatus(parent.key, item.key)">
+                    {{i.name}}
+                    <img src="../../../../../assets/images/add.png" class="img-fluid ms-2" alt="Add">
+                </label>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div *ngFor="let main of sectorsArray;let i=index">
+    <div *ngFor="let detail of main.subSectorArr;let j=index">
+        <div *ngIf="detail.subSectorItemArr.length > 0"  class="subsector_title d-flex align-items-center justify-content-between">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" [disabled]="isDisabled" [(ngModel)]="detail.status" (ngModelChange)="changeSectorStatus(i,j,detail.status)"  id="customCheck{{main.sectorId}}">
+                <label class="form-check-label" for="customCheck{{main.sectorId}}">
+                    {{detail.subSectorName}}
+                </label>
+            </div>
+            {{main.sectorName}}
+        </div>
+        <div class="d-flex flex-wrap align-items-center subsectors_cats">
+            <div *ngFor="let item of detail.subSectorItemArr;let k=index">
+                <label class="d-flex align-items-center"[ngClass]="item.status?'subsector_cat_active': ''">                    
+                    <!-- <input *ngIf="item.status == 'active'" type="checkbox" class="d-none" (change)="changeCatStatus(parent.sectorId,cat.subSectorId ,item.subSectorItemId)" checked>
+                    <input *ngIf="item.status != 'active'" type="checkbox" class="d-none" (change)="changeCatStatus(parent.sectorId,cat.subSectorId ,item.subSectorItemId)">
+                     -->
+                    <input  type="checkbox" class="d-none" [disabled]="isDisabled" [(ngModel)]="item.status" (change)="changeCatStatus(i,j,k)">
+                    {{item.subSectorItemName}}
+                    <img src="../../../../../assets/images/add.png" *ngIf="!isDisabled" class="img-fluid ms-2" alt="Add">
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
